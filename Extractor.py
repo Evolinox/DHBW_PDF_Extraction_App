@@ -1,22 +1,22 @@
 from PyPDF2 import PdfReader
 #Imports Imaga-analysation
 import os
-import fitz 
-import io 
+import fitz
 from PIL import Image 
-from names_dataset import NameDataset #Prüfen, ob Namen
+import json
 folder = "Sample_PDFs"
 filelist = os.listdir(folder)#alle Testdateien
-reader = PdfReader("Sample_PDFs/" + filelist[30])#Fehler: 3;4;5;6;7;8;9;10;13;14;15;19;20;21;22;23;24;26;27;28;29;30;...
+reader = PdfReader("Sample_PDFs/" + filelist[0])#Fehler: 3;4;5;6;7;8;9;10;13;14;15;19;20;21;22;23;24;26;27;28;29;30;...
 number_of_pages = len(reader.pages)
 page = reader.pages[0]
 text = page.extract_text()
 meta = reader.metadata
 a = 0
 imagecounter = 0
+location = ""
 #Probedaten:
 
-
+author = ""
 
 
 def Metadata():
@@ -43,68 +43,79 @@ def extracting():
     print(totalText)
 #extracting()
 
+def getLocation(filenumber):        
+        blanktext = text.replace(" ", "")
+        if "Lörrach" in blanktext:
+            location = "Lörrach"
+        elif "Mosbach" in blanktext:
+            if "Bad Mergentheim" in blanktext:
+                location = "Bad Mergentheim"
+            else: location = "Mosbach"
+        else: 
+            location = "unknown"
+            reader.pages.remove[0]
+            getData(filenumber)
 
-def getData():
+        print(location)
+
+def getData(filenumber):
     #for files in filelist:
-        reader = PdfReader("Sample_PDFs/" + filelist[0])
-
+        reader = PdfReader("Sample_PDFs/" + filelist[filenumber])
         page=reader.pages[0]
         site = page.extract_text()
         pagetext = str(site)
         lines = pagetext.splitlines()
-        pagetext = ""
+        text = ""
         for line in lines:
-            flagletter = False
-            for letter in line:
-                if letter.isalpha():#prüft, ob Buchstabe in Zeile
-                    flagletter = True
-            if not flagletter:
-                lines.remove(line) #löscht leere zeilen
-            else:
-                pagetext += line + "\n"
-        #print(pagetext)
-        title = site.split("Bachelorarbeit")
-        #print(pagetext)
-        print(title[0])
-        for line in lines:
-            if "von" in line and len(line)<5: #get Author; funktioniert nur, wenn es eine gewisse Formatierung gibt
-                nextline = lines[lines.index(line)+1]
-                index = 0
-                # while index < len(nextline):
-                #     if letter.isalpha:
-                #         author = nextline
-                #     index += 1
-                #     if author != "":
-                #         print(author)
-                #         index = len(nextline)
-                #     if index == len(nextline):
-                #         if author == "":
-                #             nextline = lines[lines.index(line)+1]
-                #             index = 0
-                    
+            if not line.isspace():
+                text = text + line + "\n"
+        blanktext = text.replace(" ", "")
+        getLocation(filenumber)
+        title = text.split("Bachelorarbeit")[0].replace("\n", "")
+        print(title)
+        if location == "Mosbach" or location == "Bad Mergentheim":
+            lines = text.splitlines()
+            for line in lines:
+                if "von" in line and len(line)<5: #get Author; funktioniert nur, wenn es eine gewisse Formatierung gibt
+                    nextline = lines[lines.index(line)+1]
+                    index = 0
+                    # while index < len(nextline):
+                    #     if letter.isalpha:
+                    #         author = nextline
+                    #     index += 1
+                    author = nextline
+                    print(author)
+                    #     if author != "":
+                    #         print(author)
+                    #         index = len(nextline)
+                    #     if index == len(nextline):
+                    #         if author == "":
+                    #             nextline = lines[lines.index(line)+1]
+                    #             index = 0
+                        
 
-#                print(lines[lines.index(line)+1]) #funktioniert nur bei bestimmten Layout
-#                author = lines[lines.index(line)+1]
-#                print(author)
-        #title = pagetext.split("Bachelorarbeit")
-        #author = title[0].split("von")
-        #author = author[0].split("eingereicht am")
-        #print("Titel: " + title[0])
-        #print("Von : " + author[0])
-        #date = author[0].split("Matrikelnummer")
-        #print("Einreichedatum: " + date[0])
-        #print(len(page.images))
-        #imagecounter += page.images
-getData()
-def isname(name): #prüde, ob eingegebener String ein Name ist
-    namebool = False
-    name = str(name)
-    strings = name.split(" ")
-    for names in strings:
-        namecheck = NameDataset.search('Walter')
-        print(namecheck)
-    return namebool
-#isname('Florian')
+    #                print(lines[lines.index(line)+1]) #funktioniert nur bei bestimmten Layout
+    #                author = lines[lines.index(line)+1]
+    #                print(author)
+            #title = pagetext.split("Bachelorarbeit")
+            #author = title[0].split("von")
+            #author = author[0].split("eingereicht am")
+            #print("Titel: " + title[0])
+            #print("Von : " + author[0])
+            #date = author[0].split("Matrikelnummer")
+            #print("Einreichedatum: " + date[0])
+            #print(len(page.images))
+            #imagecounter += page.images
+counter = 0
+while counter < len(filelist):
+    print(counter)
+    reader = PdfReader("Sample_PDFs/" + filelist[counter])
+    #page = reader.pages[0]
+   # text = page.extract_text()
+
+    getData(counter)
+    print("")
+    counter += 1
 def images():
     
     count = 0
@@ -161,3 +172,12 @@ def imagebyMupdf():
 #print("We have " + str(imagecounter) + " Images." )
 
 #print(text)
+def getJson():
+    jsonContent = {
+        "title": "SAP ist cool!",
+        "student": author,
+        "totalPages": number_of_pages,
+        "firma": "SIT",
+        "gliederung": ["Einleitung", "Was ist SAP?", "Geschichte", "HANA", "UI5", "Meins Meinung"]
+    }
+    bachelorTestJson = json.dumps(jsonContent)
