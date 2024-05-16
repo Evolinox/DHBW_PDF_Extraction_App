@@ -2,6 +2,7 @@ from PyPDF2 import PdfReader
 #Imports Imaga-analysation
 import os
 import fitz
+import re
 from PIL import Image 
 import json
 folder = "Sample_PDFs"
@@ -14,6 +15,7 @@ meta = reader.metadata
 a = 0
 imagecounter = 0
 location = ""
+totalText = ""
 #Probedaten:
 
 author = ""
@@ -31,11 +33,11 @@ def Metadata():
     print("Text: ")
 #Metadata()
 def extracting():
-    totalText = ""
+    global totalText
     a1 = 0
     while a1 < (number_of_pages-1):
         page=reader.pages[a1]
-        #print(page.extract_text())
+        print(page.extract_text())
         totalText += str(page.extract_text())
         a1+=1
         #print(len(page.images))
@@ -43,25 +45,36 @@ def extracting():
     print(totalText)
 #extracting()
 
-def getLocation(filenumber):        
+def getLocation():  
+        global text
+        global location  
+        global counter
+        global pagecounter
+        global page    
         blanktext = text.replace(" ", "")
         if "Lörrach" in blanktext:
             location = "Lörrach"
         elif "Mosbach" in blanktext:
-            if "Bad Mergentheim" in blanktext:
+            if "Bad Mergentheim" in blanktext or "MGH" in blanktext:
                 location = "Bad Mergentheim"
             else: location = "Mosbach"
         else: 
             location = "unknown"
-            reader.pages.remove[0]
-            getData(filenumber)
+            page = reader.pages[pagecounter]
+            if pagecounter < number_of_pages:
+                pagecounter += 1
+                getData()
 
-        print(location)
+        
 
-def getData(filenumber):
+def getData():
+        global location
+        global text
     #for files in filelist:
-        reader = PdfReader("Sample_PDFs/" + filelist[filenumber])
-        page=reader.pages[0]
+        global page
+        global author
+        global title
+
         site = page.extract_text()
         pagetext = str(site)
         lines = pagetext.splitlines()
@@ -70,52 +83,59 @@ def getData(filenumber):
             if not line.isspace():
                 text = text + line + "\n"
         blanktext = text.replace(" ", "")
-        getLocation(filenumber)
-        title = text.split("Bachelorarbeit")[0].replace("\n", "")
-        print(title)
+        getLocation()
+        title = text.split("Bachelorarbeit")[0].replace("\n", "").strip()
+        
+        lines = text.splitlines()
+        author = ""
         if location == "Mosbach" or location == "Bad Mergentheim":
-            lines = text.splitlines()
             for line in lines:
-                if "von" in line and len(line)<5: #get Author; funktioniert nur, wenn es eine gewisse Formatierung gibt
-                    nextline = lines[lines.index(line)+1]
-                    index = 0
-                    # while index < len(nextline):
-                    #     if letter.isalpha:
-                    #         author = nextline
-                    #     index += 1
-                    author = nextline
-                    print(author)
-                    #     if author != "":
-                    #         print(author)
-                    #         index = len(nextline)
-                    #     if index == len(nextline):
-                    #         if author == "":
-                    #             nextline = lines[lines.index(line)+1]
-                    #             index = 0
-                        
+                if "von" in line.replace(" ", "") and len(line.replace(" ",""))<5: #get Author; funktioniert nur, wenn es eine gewisse Formatierung gibt
+                    author = lines[lines.index(line)+1].strip()
+        elif location == "Lörrach":
+            for line in lines:
+                if "Lörrach" in line.replace(" ", ""):
+                    if lines.index(line) + 1 < len(lines):
+                        author = lines[lines.index(line)+1].strip()
+                    else:
+                        specifyed = line.split("Lörrach")[1]
+                        match = re.search(r'\d', specifyed)  # Search for the first digit
+                        if match:
+                            author = specifyed[:match.start()].strip()
+        if author == "":
+            if "Autor" in text or "Verfasser" in text:
+                for line in lines:
+                    if "Autor" in line or "Verfasser" in line:
+                        author = line.split(":")[1].strip()                        
+            else: author = "unknown"
 
-    #                print(lines[lines.index(line)+1]) #funktioniert nur bei bestimmten Layout
-    #                author = lines[lines.index(line)+1]
-    #                print(author)
-            #title = pagetext.split("Bachelorarbeit")
-            #author = title[0].split("von")
-            #author = author[0].split("eingereicht am")
-            #print("Titel: " + title[0])
-            #print("Von : " + author[0])
-            #date = author[0].split("Matrikelnummer")
-            #print("Einreichedatum: " + date[0])
-            #print(len(page.images))
-            #imagecounter += page.images
+
+
+
+def printinfos():
+    print(author)
+    print(title)
+    print(location)
+
 counter = 0
 while counter < len(filelist):
+    pagecounter = 0
     print(counter)
+    print(filelist[counter])
     reader = PdfReader("Sample_PDFs/" + filelist[counter])
-    #page = reader.pages[0]
-   # text = page.extract_text()
+    page=reader.pages[0]
 
-    getData(counter)
+    getData()
+    printinfos()
     print("")
     counter += 1
+
+# reader = PdfReader("Sample_PDFs/" + filelist[38])
+# print(reader.pages[0].extract_text())
+
+#um zusätzlich erste Seite zu drucken
+
+
 def images():
     
     count = 0
@@ -128,7 +148,9 @@ def images():
                 count += 1
         print("At page " + str(a+1) + " we reached " + str(count)+ " Images")
         a+=1
+
         #Transparentes Bild -> Fehler!!!
+    
 def imagebyMupdf():
     file = "160907_Bachelorarbeit_Sebastian Sperl.pdf"
     
@@ -164,20 +186,15 @@ def imagebyMupdf():
             # get the image extension 
             image_ext = base_image["ext"] 
     print("We have found a total of " + str(total_images) + " images in the file.")
-#imagebyMupdf()
-        
-    
-#images()
-#extracting()
-#print("We have " + str(imagecounter) + " Images." )
 
-#print(text)
+
 def getJson():
     jsonContent = {
         "title": "SAP ist cool!",
         "student": author,
         "totalPages": number_of_pages,
         "firma": "SIT",
-        "gliederung": ["Einleitung", "Was ist SAP?", "Geschichte", "HANA", "UI5", "Meins Meinung"]
+        "gliederung": ["Einleitung", "Was ist SAP?", "Geschichte", "HANA", "UI5", "Meins Meinung"],
+        "text": totalText
     }
     bachelorTestJson = json.dumps(jsonContent)
