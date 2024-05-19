@@ -17,9 +17,11 @@ imagecounter = 0
 location = ""
 totalText = ""
 #Probedaten:
-
+title = ""
 author = ""
-
+company = ""
+matNr = ""
+blanktext = ""
 
 def Metadata():
 
@@ -74,9 +76,11 @@ def getData():
         global page
         global author
         global title
+        global blanktext
 
         site = page.extract_text()
         pagetext = str(site)
+        #print(site)
         lines = pagetext.splitlines()
         text = ""
         for line in lines:
@@ -84,7 +88,6 @@ def getData():
                 text = text + line + "\n"
         blanktext = text.replace(" ", "")
         getLocation()
-        title = text.split("Bachelorarbeit")[0].replace("\n", "").strip()
         
         lines = text.splitlines()
         author = ""
@@ -92,6 +95,9 @@ def getData():
             for line in lines:
                 if "von" in line.replace(" ", "") and len(line.replace(" ",""))<5: #get Author; funktioniert nur, wenn es eine gewisse Formatierung gibt
                     author = lines[lines.index(line)+1].strip()
+
+                        
+                
         elif location == "Lörrach":
             for line in lines:
                 if "Lörrach" in line.replace(" ", ""):
@@ -109,6 +115,54 @@ def getData():
                         author = line.split(":")[1].strip()                        
             else: author = "unknown"
 
+def getTitle():
+    global title
+    title = text.split("helor")[0].replace("\n", "").strip()
+    title = title.split("HELOR")[0].strip()
+    title= title[:-3]
+    if "Duale Hochschule Baden" in title: #check, if in Layout, there is the location and the title switched
+        title=text.split("helor")[1].replace("\n", "").strip()
+        title = title.split("Studienrichtung")[0].strip()
+    if len(title) > 300: #annahme: über 300 Zeichen entsprechen einem Fehler
+        title = "invalid"
+
+def getMatNr():
+    global matNr
+    matNr = ""
+    if "Matrikelnummer" in blanktext:
+        lines = blanktext.splitlines()
+        for line in lines:
+            if "Matrikelnummer" in line:
+                    
+                #if ":" in line:
+                    matNr = re.findall(r"\d{7}", line)[0]
+                    # match = re.search(r'\d{7}', line)
+                    # if match:
+                    #     matNr = line[:match.start()].strip()
+    print("Matnr: " + matNr)
+
+def getCompany():
+    global company
+    if "firma" in text or "Firma" in text or "Dualer Partner" in text:
+        lines = text.splitlines()
+        for line in lines:
+            if "firma" in line or "Firma" in line or "Dualer Partner" in line:
+                if not "Betreuer" in line:
+                    if ":" in line:
+                        company = line.split(":")[1]
+                    elif "irma" in line:
+                        company = line.split("irma")[1]
+                    elif "Partner" in line:
+                        company = line.split("Partner")[1]
+            # if company != "":
+            #     if lines.index(line) < len(lines):
+            #         if re.search('\S', lines[lines.index(line)+1]).start() > 8:
+            #             line = lines[lines.index(line)+1]
+            #             company += line
+    company = company.strip()
+    if company == "":
+        company = "unknown"
+    print(company)
 
 
 
@@ -124,14 +178,22 @@ while counter < len(filelist):
     print(filelist[counter])
     reader = PdfReader("Sample_PDFs/" + filelist[counter])
     page=reader.pages[0]
-
     getData()
+    getTitle()
+    getCompany()
+    try:
+        getMatNr()
+    except: 
+        pass
     printinfos()
     print("")
     counter += 1
 
-# reader = PdfReader("Sample_PDFs/" + filelist[38])
-# print(reader.pages[0].extract_text())
+read = PdfReader("Sample_PDFs/" + filelist[19])
+print(read.pages[0].extract_text())
+#print(read.pages[30].extract_text())
+#print(read.pages[2].extract_text())
+#print(read.pages[3].extract_text())
 
 #um zusätzlich erste Seite zu drucken
 
@@ -147,7 +209,8 @@ def images():
                 fp.write(image_file_object.data)
                 count += 1
         print("At page " + str(a+1) + " we reached " + str(count)+ " Images")
-        a+=1
+        
+
 
         #Transparentes Bild -> Fehler!!!
     
@@ -190,10 +253,11 @@ def imagebyMupdf():
 
 def getJson():
     jsonContent = {
-        "title": "SAP ist cool!",
+        "title": title,
         "student": author,
         "totalPages": number_of_pages,
-        "firma": "SIT",
+        "firma": company,
+        "matNr": matNr,
         "gliederung": ["Einleitung", "Was ist SAP?", "Geschichte", "HANA", "UI5", "Meins Meinung"],
         "text": totalText
     }
