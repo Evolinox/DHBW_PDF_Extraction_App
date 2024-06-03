@@ -28,10 +28,9 @@ def main(page: ft.Page):
 
         # Modus Wahl
     uploadText = ft.Text("Laden Sie eine Datei hoch:")
-    uploadTextButton = "Datei auswählen" # default text for button
     uploadButton = ft.ElevatedButton("Datei auswählen",
-    icon=ft.icons.UPLOAD_FILE,
-    on_click=lambda _: pick_files_dialog.pick_files(allow_multiple=False, allowed_extensions=["pdf"]))
+        icon=ft.icons.UPLOAD_FILE,
+        on_click=lambda _: pick_files_dialog.pick_files(allow_multiple=False, allowed_extensions=["pdf"]))
 
     def radiogroup_changed(e):
         modus = e.control.value
@@ -49,7 +48,6 @@ def main(page: ft.Page):
         page.update()
     
     def filterUpdate(e):
-        # print(f"Filter {e.key} changed to {e.value}")
         activFilter[e.key] = {filterList[e.key]: e.value}
         print(f"Filter aktives: {activFilter}")
 
@@ -71,13 +69,11 @@ def main(page: ft.Page):
     filterList = ["Titel", "Name", "Seitenanzahl", "Abbildungsverzeichnis"]
     filterCheckboxList = []
     activFilter = []
-    file_location = ""
 
     # create activFilter list with all filters set to "False"
     for item in filterList:
         filterCheckbox = {item: False}
         activFilter.append(filterCheckbox)
-    print(f"aktiv Filter: {activFilter}")
 
     # create all Checkboxes into filterCheckboxList
     i = 0
@@ -86,8 +82,6 @@ def main(page: ft.Page):
         filterCheckboxList.append(filterCheckbox)
         print(f"Filter {i}: {item}")
         i += 1
-
-    print(f" filterCheckboxList: {filterCheckboxList}")
     
     # Button Analyse
     def analysieren(e):
@@ -97,7 +91,6 @@ def main(page: ft.Page):
         else:
             print("Analyse Ordner...")
         print(f"Analyse Modus: {modusWahl.value}")
-        datei = selected_files.value
         print(f"Dateipfad: {file_location}")
 
         i = 0
@@ -108,6 +101,8 @@ def main(page: ft.Page):
             else:
                 print(f"{key}: inactive")
             i += 1
+        print(activFilter)
+        print("Analyse beendet!")
     
     page.add(
         ft.Row(
