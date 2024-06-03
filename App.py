@@ -49,7 +49,6 @@ def main(page: ft.Page):
     
     def filterUpdate(e):
         activFilter[e.key] = {filterList[e.key]: e.value}
-        print(f"Filter aktives: {activFilter}")
 
     # precreate scopable variables
     pick_files_dialog = ft.FilePicker(on_result=pick_files_result)
@@ -114,6 +113,7 @@ def main(page: ft.Page):
                         modusWahl,
                     ],
                     ft.MainAxisAlignment.CENTER,
+                    width="500px",
                 ),
                 ft.Column(
                     [
@@ -122,14 +122,20 @@ def main(page: ft.Page):
                         selected_files,
                     ],
                     ft.MainAxisAlignment.CENTER,
+                    width="500px",
                 ),
             ],
             ft.MainAxisAlignment.CENTER,
-            ft.CrossAxisAlignment.START,
+            ft.CrossAxisAlignment.CENTER,
+            width="1000px",
         ),
         ft.Row(
             [
-                ft.Text("Filter wählen: "),
+            ft.Text("Filter wählen: "),
+            ]
+        ),
+        ft.Row(
+            [
                 *[ft.Checkbox(key=item['key'], 
                     label=item['label'], 
                     value=False, 
