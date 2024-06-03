@@ -213,7 +213,7 @@ def getJson():
         "text": totalText
     }
     bachelorTestJson = json.dumps(jsonContent)
-    print(bachelorTestJson)
+    #print(bachelorTestJson)
 
 def runExtraction():  
     extracting()
