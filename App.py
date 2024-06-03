@@ -17,11 +17,36 @@ def main(page: ft.Page):
             print(f"File Location: {file_location}")
         selected_files.update()
 
+    def pick_folder_result(e: ft.FilePickerResultEvent):
+        selected_files.value = e.path if e.path else "Abgebrochen!"
+        if e.path:
+            global file_location
+            file_location = e.path
+            print(f"File Location: {file_location}")
+        selected_files.update()
+
+
         # Modus Wahl
+    uploadText = ft.Text("Laden Sie eine Datei hoch:")
+    uploadTextButton = "Datei auswählen" # default text for button
+    uploadButton = ft.ElevatedButton("Datei auswählen",
+    icon=ft.icons.UPLOAD_FILE,
+    on_click=lambda _: pick_files_dialog.pick_files(allow_multiple=False, allowed_extensions=["pdf"]))
+
     def radiogroup_changed(e):
         modus = e.control.value
         print(f"neuer Modus: {modus}")
-        page.update(),
+        if modus == "Datei":
+            uploadText.value = "Laden Sie eine Datei hoch:"
+            uploadButton.text = "Datei auswählen"
+            selected_files.value = ""
+            uploadButton.on_click = lambda _: pick_files_dialog.pick_files(allow_multiple=False, allowed_extensions=["pdf"])
+        else:
+            uploadText.value = "Laden Sie ein Verzeichnis hoch:"
+            uploadButton.text = "Verzeichnis auswählen"
+            selected_files.value = ""
+            uploadButton.on_click = lambda _: pick_folder_dialog.get_directory_path()
+        page.update()
     
     def filterUpdate(e):
         # print(f"Filter {e.key} changed to {e.value}")
@@ -30,7 +55,9 @@ def main(page: ft.Page):
 
     # precreate scopable variables
     pick_files_dialog = ft.FilePicker(on_result=pick_files_result)
+    pick_folder_dialog = ft.FilePicker(on_result=pick_folder_result)
     page.overlay.append(pick_files_dialog)
+    page.overlay.append(pick_folder_dialog)
 
     selected_files = ft.Text()
 
@@ -44,6 +71,7 @@ def main(page: ft.Page):
     filterList = ["Titel", "Name", "Seitenanzahl", "Abbildungsverzeichnis"]
     filterCheckboxList = []
     activFilter = []
+    file_location = ""
 
     # create activFilter list with all filters set to "False"
     for item in filterList:
@@ -94,12 +122,9 @@ def main(page: ft.Page):
                 ),
                 ft.Column(
                     [
-                        ft.Text("Laden Sie eine Datei oder ein Verzeichnis hoch: "),
-                        ft.ElevatedButton("Datei hochladen",
-                            icon=ft.icons.UPLOAD_FILE,
-                            on_click=lambda _: pick_files_dialog.pick_files(allow_multiple=True),
-                ),
-                selected_files,
+                        uploadText,
+                        uploadButton,
+                        selected_files,
                     ],
                     ft.MainAxisAlignment.CENTER,
                 ),
