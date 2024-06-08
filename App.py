@@ -1,8 +1,19 @@
 import flet as ft
+import Modules.llm as llm
+import json
+
+jsonContent = {
+  "title": "SAP ist cool!",
+  "student": "Patrick",
+  "firma": "SIT",
+  "gliederung": ["Einleitung", "Was ist SAP?", "Geschichte", "HANA", "UI5", "Meins Meinung"]
+}
+bachelorTestJson = json.dumps(jsonContent)
 
 def main(page: ft.Page):
     page.title = "PDF Extraction App"
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
     # vvvvvv----------------------fill with real filters
     filterList = ["Titel", "Name", "Seitenanzahl", "Abbildungsverzeichnis"]
@@ -61,11 +72,14 @@ def main(page: ft.Page):
             selected_files.value = ""
             file_location = ""
             uploadButton.on_click = lambda _: pick_folder_dialog.get_directory_path()
+    llmText = ft.Text(value="", text_align=ft.TextAlign.CENTER, width=500)
+
+    def getLlmModel(e):
+        llmText.value = llm.analyzeJson(bachelorTestJson)
         page.update()
     modusWahl = ft.RadioGroup(value="Datei", content=ft.Column([
         ft.Radio(value="Datei", label="Datei"),
         ft.Radio(value="Ordner", label="Ordner")]), on_change=mode_changed)
-
     # create activFilter list with all filters set to "False"
     for item in filterList:
         filterCheckbox = {item: False}
@@ -164,6 +178,7 @@ def main(page: ft.Page):
         ],
         ft.MainAxisAlignment.CENTER,
         ft.CrossAxisAlignment.CENTER,
+        ft.IconButton(ft.icons.SEARCH_ROUNDED, on_click=getLlmModel)
     )
     resultPageList.append(resultPageFistRow)
 
