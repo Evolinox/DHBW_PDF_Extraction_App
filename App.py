@@ -3,10 +3,10 @@ import Modules.llm as llm
 import json
 
 jsonContent = {
-  "title": "SAP ist cool!",
-  "student": "Patrick",
-  "firma": "SIT",
-  "gliederung": ["Einleitung", "Was ist SAP?", "Geschichte", "HANA", "UI5", "Meins Meinung"]
+    "title": "SAP ist cool!",
+    "student": "Patrick",
+    "firma": "SIT",
+    "gliederung": ["Einleitung", "Was ist SAP?", "Geschichte", "HANA", "UI5", "Meins Meinung"]
 }
 bachelorTestJson = json.dumps(jsonContent)
 
@@ -47,7 +47,6 @@ def main(page: ft.Page):
             print(f"File Location: {file_location}")
         selected_files.update()
 
-    # precreate scopable variables
     pick_files_dialog = ft.FilePicker(on_result=pick_files_result)
     pick_folder_dialog = ft.FilePicker(on_result=pick_folder_result)
     page.overlay.append(pick_files_dialog)
@@ -80,7 +79,6 @@ def main(page: ft.Page):
     modusWahl = ft.RadioGroup(value="Datei", content=ft.Column([
         ft.Radio(value="Datei", label="Datei"),
         ft.Radio(value="Ordner", label="Ordner")]), on_change=mode_changed)
-    # create activFilter list with all filters set to "False"
     for item in filterList:
         filterCheckbox = {item: False}
         activFilter.append(filterCheckbox)
@@ -114,7 +112,7 @@ def main(page: ft.Page):
         print("Filter: "+ str(activFilter))
         print("Analyse beendet!")
         renderResultPage()
-    # asdas
+    
     mainPageList = []
     mainPageFistRow = ft.Row(
         [
@@ -134,15 +132,18 @@ def main(page: ft.Page):
                 ft.MainAxisAlignment.CENTER,
             ),
         ],
-        ft.MainAxisAlignment.CENTER,
+        ft.MainAxisAlignment.SPACE_EVENLY,
         ft.CrossAxisAlignment.CENTER,
     )
     mainPageList.append(mainPageFistRow)
 
-    mainPageSecondRow = ft.Row(
-        [
-            ft.Text("Filter wählen: "),
-        ]
+    mainPageSecondRow = ft.Container(
+        ft.Row(
+            [
+                ft.Text("Filter wählen: ")
+            ]
+        ),
+        padding = ft.padding.only(left=8),
     )
     mainPageList.append(mainPageSecondRow)
 
