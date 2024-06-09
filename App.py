@@ -120,7 +120,7 @@ def main(page: ft.Page):
         [
             ft.Column( 
                 [
-                    ft.Text("Wählen Sie aus, was sie analysieren wollen: "),
+                    ft.Text("Wählen Sie aus, was Sie analysieren wollen: "),
                     modusWahl,
                 ],
                 ft.MainAxisAlignment.CENTER,
