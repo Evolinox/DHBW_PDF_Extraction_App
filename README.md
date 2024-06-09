@@ -7,6 +7,7 @@ Analyse von PDF-DHBW-Praxisarbeiten mit Python-Tools zur Extraktion von Features
 ### Benötigte Bibliotheken:
 pip install PyPDF2
 pip install PyPDF2[image]
+pip install flet
 
 Development-Zeiten:
 8.5. 2h 45min
