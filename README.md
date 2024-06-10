@@ -5,8 +5,10 @@ Project Management 2 Project
 Analyse von PDF-DHBW-Praxisarbeiten mit Python-Tools zur Extraktion von Features
 
 ### Benötigte Bibliotheken:
-pip install PyPDF2
-pip install PyPDF2[image]
+- pip install PyPDF2
+- pip install PyPDF2[image]
+- pip install flet
+- pip3 install ollama
 
 Development-Zeiten:
 8.5. 2h 45min
