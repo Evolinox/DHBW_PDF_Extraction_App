@@ -213,9 +213,9 @@ def getJson():
         "text": totalText
     }
     bachelorTestJson = json.dumps(jsonContent)
-    print(bachelorTestJson)
+    return bachelorTestJson
 
-def runExtraction():  
+def runExtraction(arg):  
     extracting()
     getData()
     getTitle()
@@ -224,4 +224,4 @@ def runExtraction():
         getMatNr()
     except:
         pass
-    getJson()
+    return getJson()
