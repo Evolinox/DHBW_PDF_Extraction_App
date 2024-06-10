@@ -2,9 +2,10 @@ from PyPDF2 import PdfReader
 import os
 import re 
 import json
+n = 21
 folder = "Sample_PDFs"
 filelist = os.listdir(folder)#alle Testdateien
-reader = PdfReader("Sample_PDFs/" + filelist[0])#Ausgewählte Datei
+reader = PdfReader("Sample_PDFs/" + filelist[n])#Ausgewählte Datei
 number_of_pages = len(reader.pages)
 page = reader.pages[0]
 text = page.extract_text()
@@ -225,3 +226,6 @@ def runExtraction():
     except:
         pass
     getJson()
+    print(author)
+    print(filelist[n])
+runExtraction()
