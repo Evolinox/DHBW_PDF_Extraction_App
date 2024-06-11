@@ -214,7 +214,7 @@ def main(page: ft.Page):
 
         resultPageThirdRow = ft.Row(
             [   
-                ft.ElevatedButton(text="Lade CSV", on_click=lambda _: exporter.createCsvFromJson(json.JSONDecoder.jsonObject)),
+                ft.ElevatedButton(text="Exportieren", on_click=lambda _: exporter.createCsvFromJson(objektJson['data'][0])),
                 ft.ElevatedButton(text="Neue Analyse", on_click=lambda _: renderMainPage()),
             ],
             ft.MainAxisAlignment.END,

@@ -3,8 +3,7 @@ import json
 
 from pathlib import Path
 
-def createCsvFromJson(jsonObject):
-    jsonData = json.loads(jsonObject)
+def createCsvFromJson(jsonData):
     jsonText = str(jsonData['text'])#.replace(" ", "")
     fieldnames = ['Titel', 'Student', 'Seitenanzahl', 'Firma', 'Matrikelnummer', 'Text']
     csvData = [
