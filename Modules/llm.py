@@ -1,19 +1,36 @@
 import ollama
 import json
 
+clusteredJson = {
+    "data": [
+
+    ]
+}
+
 def analyzeJson(jsonObject):
+    global jsonData
     jsonData = json.loads(jsonObject)
+    wordFrequency = getWordFrequency(jsonObject)
+    clusterJson()
+
+
+def getWordFrequency(jsonObject):
+    jsonData = json.loads(jsonObject)
+
     response = ollama.chat(model='llama2', messages=[
     {
         'role': 'user',
-        'content': 'I have a Text with the following Title: "' + jsonData['title'] + '", What do you think could be the topic of this Text?',
+        'content': 'Ich habe eine Bachelorarbeit mit dem folgenden Text: "' + jsonData['text'] + '", kannst du die Worthäufigkeit analysieren?',
     },
     ])
     msgContent = response['message']['content']
-
-    # Debug
-    print(msgContent)
+    
     return msgContent
 
 def clusterJson():
-    print("blop")
+    global jsonData
+    clusteredJson['data'].append(jsonData)
+    print(clusteredJson)
+
+def getClusteredJson():
+    return clusteredJson

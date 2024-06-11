@@ -32,7 +32,6 @@ listOfIllustrations = False
 pages = []
 result = []
 
-
 def extracting():
     global totalText
     global pages
@@ -110,8 +109,6 @@ def getData(getAuthor):
                         if "Autor" in line or "Verfasser" in line:
                             author = line.split(":")[1].strip()                        
                 else: author = "unknown"
-
-
 
 def getTitle():
     global title
