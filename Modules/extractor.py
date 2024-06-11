@@ -32,7 +32,6 @@ listOfIllustrations = False
 pages = []
 result = []
 
-
 def extracting():
     global totalText
     global pages
@@ -61,8 +60,6 @@ def getLocation(pagecounter):
             if pagecounter < number_of_pages:
                 pagecounter += 1
                 getData()
-
-        
 
 def getData(getAuthor):
         global location
@@ -111,8 +108,6 @@ def getData(getAuthor):
                             author = line.split(":")[1].strip()                        
                 else: author = "unknown"
 
-
-
 def getTitle():
     global title
     title = text.split("helor")[0].replace("\n", "").strip()
@@ -149,9 +144,6 @@ def getCompany():
     company = company.strip()
     if company == "":
         company = "unknown"
-
-
-
 
 def getJson():
     global bachelorTestJson
