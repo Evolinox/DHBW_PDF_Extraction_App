@@ -112,13 +112,13 @@ def main(page: ft.Page):
         global objektJson
         objektJson = extractor.recieve(isFolder, file_location, getTitle, getAuthor, getNumberOfPages, getCompany, getMatNr)
         jsonData = objektJson['data'][0]
-        print(jsonData)
+        #print(jsonData)
         print("-----------------Analyse beginnt-----------------")
         global resultList
         # print(resultList)
         resultList = [{"Title": jsonData['title']}, {"Autor": jsonData['student']}, {"Seitenanzahl": jsonData['totalPages']}, {"Firma": jsonData['firma']}, {"Matrikelnummer": jsonData['matNr']}]
         print("Analyse beendet!")
-        print(resultList)
+        #print(resultList)
         renderResultPage(resultList)
     
     mainPageList = []
