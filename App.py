@@ -113,11 +113,13 @@ def main(page: ft.Page):
         objektJson = extractor.recieve(isFolder, file_location, getTitle, getAuthor, getNumberOfPages, getCompany, getMatNr)
         jsonData = objektJson['data'][0]
         print(jsonData)
+        print("-----------------Analyse beginnt-----------------")
         global resultList
+        # print(resultList)
         resultList = [{"Title": jsonData['title']}, {"Autor": jsonData['student']}, {"Seitenanzahl": jsonData['totalPages']}, {"Firma": jsonData['firma']}, {"Matrikelnummer": jsonData['matNr']}]
         print("Analyse beendet!")
         print(resultList)
-        renderResultPage()
+        renderResultPage(resultList)
     
     mainPageList = []
     mainPageFistRow = ft.Row(
@@ -178,49 +180,54 @@ def main(page: ft.Page):
         for item in mainPageList:
             page.add(item)
 
-    resultPageList = []
-    resultPageFistRow = ft.Row(
-        [
-            ft.Text("Result Page")
-        ],
-        ft.MainAxisAlignment.CENTER,
-        ft.CrossAxisAlignment.CENTER,
-    )
-    resultPageList.append(resultPageFistRow)
+    def refreshResultPageList(newResultList):
+        resultPageList = []
+        resultPageFistRow = ft.Row(
+            [
+                ft.Text("Result Page")
+            ],
+            ft.MainAxisAlignment.CENTER,
+            ft.CrossAxisAlignment.CENTER,
+        )
+        resultPageList.append(resultPageFistRow)
 
-    resultPageSecondRow = ft.Row(
-        [
-            ft.DataTable(
-                columns=[
-                    ft.DataColumn(ft.Text("Filter")),
-                    ft.DataColumn(ft.Text("Ergebnis")),
-                ],
-                rows=[
-                    ft.DataRow(
-                        cells=[
-                            ft.DataCell(ft.Text(key)),
-                            ft.DataCell(ft.Text(str(value))),
-                        ]
-                    ) for item in resultList for key, value in item.items()
-                ]
-            ),
-        ],
-        ft.MainAxisAlignment.CENTER,
-    )
-    resultPageList.append(resultPageSecondRow)
+        resultPageSecondRow = ft.Row(
+            [
+                ft.DataTable(
+                    columns=[
+                        ft.DataColumn(ft.Text("Filter")),
+                        ft.DataColumn(ft.Text("Ergebnis")),
+                    ],
+                    rows=[
+                        ft.DataRow(
+                            cells=[
+                                ft.DataCell(ft.Text(key)),
+                                ft.DataCell(ft.Text(str(value))),
+                            ]
+                        ) for item in newResultList for key, value in item.items()
+                    ]
+                ),
+            ],
+            ft.MainAxisAlignment.CENTER,
+        )
+        resultPageList.append(resultPageSecondRow)
 
-    resultPageThirdRow = ft.Row(
-        [   
-            ft.ElevatedButton(text="Lade CSV", on_click=lambda _: exporter.createCsvFromJson(json.JSONDecoder.jsonObject)),
-            ft.ElevatedButton(text="Neue Analyse", on_click=lambda _: renderMainPage()),
-        ],
-        ft.MainAxisAlignment.END,
-    )
-    resultPageList.append(resultPageThirdRow)
+        resultPageThirdRow = ft.Row(
+            [   
+                ft.ElevatedButton(text="Lade CSV", on_click=lambda _: exporter.createCsvFromJson(json.JSONDecoder.jsonObject)),
+                ft.ElevatedButton(text="Neue Analyse", on_click=lambda _: renderMainPage()),
+            ],
+            ft.MainAxisAlignment.END,
+        )
+        resultPageList.append(resultPageThirdRow)
+        print("------Result Page List:")
+        print(resultPageList)
+        return resultPageList
 
-    def renderResultPage():
+    def renderResultPage(newList):
         page.clean()
-        for item in resultPageList:
+        newList = refreshResultPageList(newList)
+        for item in newList:
             page.add(item)
 
     renderMainPage()
