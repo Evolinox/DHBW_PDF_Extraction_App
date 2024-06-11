@@ -18,11 +18,12 @@ def analyzeJson(jsonObject):
     jsonData = json.loads(jsonObject)
     #print(getWordFrequency(jsonObject))
     clusterJson()
-    #analyzeTextWithNltk(jsonData['text'])
+    analyzeTextWithNltk(jsonData['text'])
 
 def analyzeTextWithNltk(text):
     print("------ NLTK started")
     print(nltk.pos_tag(word_tokenize(text)))
+    print("------ Done!")
 
 def getWordFrequency(jsonObject):
     jsonData = json.loads(jsonObject)
