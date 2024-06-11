@@ -1,6 +1,8 @@
 import flet as ft
 import Modules.llm as llm
 import json
+import Extractor as extractor
+# import Modules.exporter as exporter
 
 jsonContent = {
     "title": "SAP ist cool!",
@@ -16,12 +18,12 @@ def main(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
     # vvvvvv----------------------fill with real filters
-    filterList = ["Titel", "Name", "Seitenanzahl", "Abbildungsverzeichnis"]
+    filterList = ["Titel", "Autor", "Seitenanzahl", "Firma", "Matrikelnummer"]
     # ^^^^^^----------------------fill with real filters
     filterCheckboxList = []
     activFilter = []
     # vvvvvv----------------------fill by backend
-    resultList = [{"Title": "Test"}, {"Name": "Test"}, {"Seitenanzahl": 10}, {"Abbildungsverzeichnis": True}]
+    resultList = [{"Title": "Test"}, {"Autor": "Test"}, {"Seitenanzahl": 10}, {"Firma": "Musterfirma"}, {"Matrikelnummer": 1234567}]
     # ^^^^^^----------------------fill by backend
 
     uploadText = ft.Text("Laden Sie eine Datei hoch:")
@@ -76,6 +78,7 @@ def main(page: ft.Page):
     def getLlmModel(e):
         llmText.value = llm.analyzeJson(bachelorTestJson)
         page.update()
+
     modusWahl = ft.RadioGroup(value="Datei", content=ft.Column([
         ft.Radio(value="Datei", label="Datei"),
         ft.Radio(value="Ordner", label="Ordner")]), on_change=mode_changed)
@@ -95,10 +98,11 @@ def main(page: ft.Page):
     def analysieren(e):
         global file_location
         if (modusWahl.value == "Datei"):
+            isFolder = False
             print("Analyse Datei...")
         else:
+            isFolder = True
             print("Analyse Ordner...")
-        print(f"Analyse Modus: {modusWahl.value}")
         print(f"Dateipfad: {file_location}")
 
         i = 0
@@ -110,6 +114,15 @@ def main(page: ft.Page):
                 print(f"{key}: inactive")
             i += 1
         print("Filter: "+ str(activFilter))
+
+        getTitle = bool(activFilter[0].get('Titel'))
+        getAuthor = bool(activFilter[1].get('Autor'))
+        getNumberOfPages = bool(activFilter[2].get('Seitenanzahl'))
+        getCompany = bool(activFilter[3].get('Firma'))
+        getMatNr = bool(activFilter[4].get('Matrikelnummer'))
+
+        global objektJson
+        objektJson = extractor.recieve(isFolder, file_location, getTitle, getAuthor, getNumberOfPages, getCompany, getMatNr)
         print("Analyse beendet!")
         renderResultPage()
     
@@ -205,7 +218,8 @@ def main(page: ft.Page):
     resultPageList.append(resultPageSecondRow)
 
     resultPageThirdRow = ft.Row(
-        [
+        [   
+            ft.ElevatedButton(text="Lade CSV", on_click=lambda _: exporter.createCsvFromJson(json.JSONDecoder.jsonObject)),
             ft.ElevatedButton(text="Neue Analyse", on_click=lambda _: renderMainPage()),
         ],
         ft.MainAxisAlignment.END,
