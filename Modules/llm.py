@@ -1,5 +1,11 @@
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+
 import ollama
 import json
+
+stop_words = set(stopwords.words("german"))
 
 clusteredJson = {
     "data": [
@@ -10,8 +16,13 @@ clusteredJson = {
 def analyzeJson(jsonObject):
     global jsonData
     jsonData = json.loads(jsonObject)
+    #print(getWordFrequency(jsonObject))
     clusterJson()
+    #analyzeTextWithNltk(jsonData['text'])
 
+def analyzeTextWithNltk(text):
+    print("------ NLTK started")
+    print(nltk.pos_tag(word_tokenize(text)))
 
 def getWordFrequency(jsonObject):
     jsonData = json.loads(jsonObject)
@@ -28,7 +39,7 @@ def getWordFrequency(jsonObject):
 
 def clusterJson():
     clusteredJson['data'].append(jsonData)
-    print(clusteredJson)
+    #print(clusteredJson)
 
 def getClusteredJson():
     return clusteredJson

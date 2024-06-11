@@ -17,6 +17,7 @@ pip install flet
 pip install PyPDF2
 pip install PyPDF2[image]
 pip install ollama
+pip install nltk
 ```
 
 Um das Programm zu starten, bitte diesen Command ausführen:
