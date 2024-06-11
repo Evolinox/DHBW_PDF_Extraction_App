@@ -1,44 +1,20 @@
 import flet as ft
 import Modules.llm as llm
-import Modules.extractor as extractor
+import Modules.extractor as Extractor
+import json
+
+jsonContent = {
+    "title": "SAP ist cool!",
+    "student": "Patrick",
+    "firma": "SIT",
+    "gliederung": ["Einleitung", "Was ist SAP?", "Geschichte", "HANA", "UI5", "Meins Meinung"]
+}
+bachelorTestJson = json.dumps(jsonContent)
 
 def main(page: ft.Page):
     page.title = "PDF Extraction App"
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-
-    # vvvvvv----------------------fill with real filters
-    filterList = ["Titel", "Name", "Seitenanzahl", "Abbildungsverzeichnis"]
-    # ^^^^^^----------------------fill with real filters
-    filterCheckboxList = []
-    activFilter = []
-    # vvvvvv----------------------fill by backend
-    resultList = [{"Title": "Test"}, {"Name": "Test"}, {"Seitenanzahl": 10}, {"Abbildungsverzeichnis": True}]
-    # ^^^^^^----------------------fill by backend
-
-    uploadText = ft.Text("Laden Sie eine Datei hoch:")
-    uploadButton = ft.ElevatedButton("Datei auswählen",
-        icon=ft.icons.UPLOAD_FILE,
-        on_click=lambda _: pick_files_dialog.pick_files(allow_multiple=False, allowed_extensions=["pdf"]))
-    
-    def pick_files_result(e: ft.FilePickerResultEvent):
-        selected_files.value = (
-            ", ".join(map(lambda f: f.name, e.files)) if e.files else "Abgebrochen!"
-        )
-        if e.files:
-            selectedFileOrDirectory.value = e.files[0].name
-            dataLocation = e.files[0].path
-            isDirectory = False
-            print(e.files[0].path)
-        elif e.path:
-            selectedFileOrDirectory.value = e.path
-            dataLocation = e.path
-            isDirectory = True
-            print(e.path)
-        page.update()
-
-    def updateFilter(e):
-        activeFilter[e.key] = {filterList[e.key]: e.value}
 
     # vvvvvv----------------------fill with real filters
     filterList = ["Titel", "Name", "Seitenanzahl", "Abbildungsverzeichnis"]
@@ -98,24 +74,8 @@ def main(page: ft.Page):
             uploadButton.on_click = lambda _: pick_folder_dialog.get_directory_path()
     llmText = ft.Text(value="", text_align=ft.TextAlign.CENTER, width=500)
 
-        if (isDirectory):
-            return
-        else:
-            uploadText.value = "Laden Sie ein Verzeichnis hoch:"
-            uploadButton.text = "Verzeichnis auswählen"
-            selected_files.value = ""
-            file_location = ""
-            uploadButton.on_click = lambda _: pick_folder_dialog.get_directory_path()
-    llmText = ft.Text(value="", text_align=ft.TextAlign.CENTER, width=500)
-
     def getLlmModel(e):
         llmText.value = llm.analyzeJson(bachelorTestJson)
-        page.update()
-
-    def exportCsvFile(e):
-        global extractionData
-        page.dialog = csvInfoDialog
-        csvInfoDialog.open = True
         page.update()
     modusWahl = ft.RadioGroup(value="Datei", content=ft.Column([
         ft.Radio(value="Datei", label="Datei"),
