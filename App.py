@@ -1,4 +1,5 @@
 import flet as ft
+import json
 import Modules.llm as llm
 import Modules.extractor as extractor
 import Modules.exporter as exporter
@@ -65,10 +66,6 @@ def main(page: ft.Page):
             file_location = ""
             uploadButton.on_click = lambda _: pick_folder_dialog.get_directory_path()
     llmText = ft.Text(value="", text_align=ft.TextAlign.CENTER, width=500)
-
-    def getLlmModel(e):
-        llmText.value = llm.analyzeJson(bachelorTestJson)
-        page.update()
 
     modusWahl = ft.RadioGroup(value="Datei", content=ft.Column([
         ft.Radio(value="Datei", label="Datei"),
@@ -186,7 +183,6 @@ def main(page: ft.Page):
         ],
         ft.MainAxisAlignment.CENTER,
         ft.CrossAxisAlignment.CENTER,
-        ft.IconButton(ft.icons.SEARCH_ROUNDED, on_click=getLlmModel)
     )
     resultPageList.append(resultPageFistRow)
 

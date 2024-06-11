@@ -200,9 +200,10 @@ def recieve(isFolder, file, getTitle, getAuthor, getNumberOfPages, getCompany, g
     global page
     global text
     global number_of_pages
+    file = file.replace(os.sep, '/')
     if isFolder != True:
         reader = PdfReader(file)
-        filename = str(file).replace('\', '/'')   
+        filename = file
         page = reader.pages[0]   
         text = page.extract_text() 
         if getNumberOfPages: 
@@ -218,7 +219,7 @@ def recieve(isFolder, file, getTitle, getAuthor, getNumberOfPages, getCompany, g
             if getNumberOfPages: 
                 number_of_pages = len(reader.pages)  
             runExtraction(getTitle, getAuthor, getCompany, getMatNr)
-    totalJson = llm.clusterJson
+    totalJson = llm.getClusteredJson()
     return totalJson
 
 
