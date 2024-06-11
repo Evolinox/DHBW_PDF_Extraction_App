@@ -10,7 +10,6 @@ clusteredJson = {
 def analyzeJson(jsonObject):
     global jsonData
     jsonData = json.loads(jsonObject)
-    wordFrequency = getWordFrequency(jsonObject)
     clusterJson()
 
 
@@ -28,9 +27,8 @@ def getWordFrequency(jsonObject):
     return msgContent
 
 def clusterJson():
-    global jsonData
     clusteredJson['data'].append(jsonData)
     print(clusteredJson)
 
 def getClusteredJson():
-    return json.dumps(clusteredJson)
+    return clusteredJson
