@@ -1,5 +1,6 @@
 import flet as ft
 import Modules.llm as llm
+import Modules.extractor as Extractor
 import json
 
 jsonContent = {
