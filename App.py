@@ -15,7 +15,7 @@ def main(page: ft.Page):
     filterCheckboxList = []
     activFilter = []
     # vvvvvv----------------------fill by backend
-    resultList = [{"Title": "Test"}, {"Autor": "Test"}, {"Seitenanzahl": 10}, {"Firma": "Musterfirma"}, {"Matrikelnummer": 1234567}]
+    resultList = [{"Title": "Test"}, {"Autor": "Test"}, {"Seitenanzahl": 10}, {"Firma": "Musterfirma"}, {"Matrikelnummer": 1234567}, {"Anzahl Nomen": 0}, {"Anzahl Verben": 0}, {"Anzahl Adverben": 0}, {"Anzahl Adjektive": 0}]
     # ^^^^^^----------------------fill by backend
 
     uploadText = ft.Text("Laden Sie eine Datei hoch:")
@@ -116,7 +116,7 @@ def main(page: ft.Page):
         print("-----------------Analyse beginnt-----------------")
         global resultList
         # print(resultList)
-        resultList = [{"Title": jsonData['title']}, {"Autor": jsonData['student']}, {"Seitenanzahl": jsonData['totalPages']}, {"Firma": jsonData['firma']}, {"Matrikelnummer": jsonData['matNr']}]
+        resultList = [{"Title": jsonData['title']}, {"Autor": jsonData['student']}, {"Seitenanzahl": jsonData['totalPages']}, {"Firma": jsonData['firma']}, {"Matrikelnummer": jsonData['matNr']}, {"Anzahl Nomen": jsonData['totalNouns']}, {"Anzahl Verben": jsonData['totalVerbs']}, {"Anzahl Adverben": jsonData['totalAdverbs']}, {"Anzahl Adjektive": jsonData['totalAdjectives']}]
         print("Analyse beendet!")
         #print(resultList)
         renderResultPage(resultList)

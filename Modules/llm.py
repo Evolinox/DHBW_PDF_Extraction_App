@@ -20,28 +20,46 @@ def downloadNltkStuff():
 def analyzeJson(jsonObject):
     global jsonData
     jsonData = json.loads(jsonObject)
-    #print(getWordFrequency(jsonObject))
-    clusterJson()
     analyzeTextWithNltk(jsonData['text'])
+    clusterJson()
 
 def analyzeTextWithNltk(text):
     print("------ NLTK started:")
     posTags = nltk.pos_tag(word_tokenize(text))
-    print(posTags)
+    print("Text successfully analyzed...")
     print("------ Extracted Data:")
+    # Get all Adjectives
+    countAdjectives = 0
+    for item in posTags:
+        if (item[1] == "JJ"):
+            countAdjectives += 1
     # Get all Nouns
     countNouns = 0
     for item in posTags:
         if (item[1] == "NN"):
             countNouns += 1
+    # Get all Adverbs
+    countAdverbs = 0
+    for item in posTags:
+        if (item[1] == "RB"):
+            countAdverbs += 1
     # Get all Verbs
     countVerbs = 0
     for item in posTags:
         if (item[1] == "VB"):
             countVerbs += 1
     
+    print("Total no. of Adjectives: " + str(countAdjectives))
     print("Total no. of Nouns: " + str(countNouns))
+    print("Total no. of Aderbs: " + str(countAdverbs))
     print("Total no. of Verbs: " + str(countVerbs))
+
+    # Dump into json
+    global jsonData
+    jsonData['totalAdjectives'] = countAdjectives
+    jsonData['totalNouns'] = countNouns
+    jsonData['totalAdverbs'] = countAdverbs
+    jsonData['totalVerbs'] = countVerbs
 
 
 def getWordFrequency(jsonObject):
@@ -64,4 +82,4 @@ def clusterJson():
 def getClusteredJson():
     return clusteredJson
 
-analyzeTextWithNltk(test_str)
+#analyzeTextWithNltk(test_str)
