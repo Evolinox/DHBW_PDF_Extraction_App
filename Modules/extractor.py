@@ -32,6 +32,7 @@ listOfIllustrations = False
 pages = []
 result = []
 
+
 def extracting():
     global totalText
     global pages
@@ -110,6 +111,8 @@ def getData(getAuthor):
                             author = line.split(":")[1].strip()                        
                 else: author = "unknown"
 
+
+
 def getTitle():
     global title
     title = text.split("helor")[0].replace("\n", "").strip()
@@ -153,7 +156,6 @@ def getCompany():
 def getJson():
     global bachelorTestJson
     global result
-    global extractedJSONData
     jsonContent = {
         "title": title,
         "student": author,
@@ -208,7 +210,7 @@ def recieve(isFolder, file, getTitle, getAuthor, getNumberOfPages, getCompany, g
     global number_of_pages
     if isFolder != True:
         reader = PdfReader(file)
-        filename = file   
+        filename = str(file).replace('\', '/'')   
         page = reader.pages[0]   
         text = page.extract_text() 
         if getNumberOfPages: 
@@ -229,4 +231,4 @@ def recieve(isFolder, file, getTitle, getAuthor, getNumberOfPages, getCompany, g
 
 
 #recieve(True, "C:/Users/nairo/Desktop/PDF working/Sample_PDFs", True, True, True, True, True)
-#recieve(False, "C:/Users/nairo/Desktop/PDF working/Sample_PDFs/Bachelorarbeit Kitzelmann.pdf", True, True, True, True, True)
+#recieve(False, "C:\Users\nairo\Desktop\PDF working\Sample_PDFs\Bachelorarbeit Kitzelmann.pdf", True, True, True, True, True)
