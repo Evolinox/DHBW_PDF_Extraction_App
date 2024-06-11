@@ -37,7 +37,7 @@ def main(page: ft.Page):
         )
         if e.files:
             global file_location 
-            file_location = e.files[0].path
+            file_location = r"{}".format(e.files[0].path)
             print(f"File Location: {file_location}")
         selected_files.update()
 
@@ -45,7 +45,7 @@ def main(page: ft.Page):
         selected_files.value = e.path if e.path else "Abgebrochen!"
         if e.path:
             global file_location
-            file_location = e.path
+            file_location = r"{}".format(e.path)
             print(f"File Location: {file_location}")
         selected_files.update()
 
@@ -123,6 +123,9 @@ def main(page: ft.Page):
 
         global objektJson
         objektJson = extractor.recieve(isFolder, file_location, getTitle, getAuthor, getNumberOfPages, getCompany, getMatNr)
+        jsonData = json.loads(objektJson)
+        global resultList
+        resultList = [{"Title": jsonData['title']}, {"Autor": jsonData['author']}, {"Seitenanzahl": jsonData['totalPages']}, {"Firma": jsonData['company']}, {"Matrikelnummer": jsonData['matNr']}]
         print("Analyse beendet!")
         renderResultPage()
     
