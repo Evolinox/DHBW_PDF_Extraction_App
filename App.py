@@ -1,8 +1,8 @@
 import flet as ft
 import Modules.llm as llm
 import json
-import Extractor as extractor
-# import Modules.exporter as exporter
+import Modules.Extractor as extractor
+import Modules.exporter as exporter
 
 jsonContent = {
     "title": "SAP ist cool!",
