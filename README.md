@@ -8,7 +8,6 @@ Benutzerinterface für eine einfache Benutzung
 PDF Import  
 CSV Export    
 
-
 ## Setup
 > [!IMPORTANT]
 > Die App benötigt ein paar Bibliotheken, diese müssen vorher mit pip installiert werden.
