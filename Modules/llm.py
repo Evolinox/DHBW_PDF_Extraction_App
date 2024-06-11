@@ -33,4 +33,4 @@ def clusterJson():
     print(clusteredJson)
 
 def getClusteredJson():
-    return clusteredJson
+    return json.dumps(clusteredJson)
