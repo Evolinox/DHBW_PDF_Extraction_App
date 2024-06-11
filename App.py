@@ -1,167 +1,213 @@
-import json
 import flet as ft
 import Modules.llm as llm
 import Modules.extractor as extractor
-import Modules.exporter as exporter
 
 def main(page: ft.Page):
     page.title = "PDF Extraction App"
-    page.vertical_alignment = ft.MainAxisAlignment.START
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.window_width = 500
-    page.window_height = 540
-    page.window_resizable = False
 
-    def onFilePicked(e: ft.FilePickerResultEvent):
-        global dataLocation
-        global isDirectory
+    # vvvvvv----------------------fill with real filters
+    filterList = ["Titel", "Name", "Seitenanzahl", "Abbildungsverzeichnis"]
+    # ^^^^^^----------------------fill with real filters
+    filterCheckboxList = []
+    activFilter = []
+    # vvvvvv----------------------fill by backend
+    resultList = [{"Title": "Test"}, {"Name": "Test"}, {"Seitenanzahl": 10}, {"Abbildungsverzeichnis": True}]
+    # ^^^^^^----------------------fill by backend
+
+    uploadText = ft.Text("Laden Sie eine Datei hoch:")
+    uploadButton = ft.ElevatedButton("Datei auswählen",
+        icon=ft.icons.UPLOAD_FILE,
+        on_click=lambda _: pick_files_dialog.pick_files(allow_multiple=False, allowed_extensions=["pdf"]))
+    
+    def pick_files_result(e: ft.FilePickerResultEvent):
+        selected_files.value = (
+            ", ".join(map(lambda f: f.name, e.files)) if e.files else "Abgebrochen!"
+        )
         if e.files:
-            selectedFileOrDirectory.value = e.files[0].name
-            dataLocation = e.files[0].path
-            isDirectory = False
-            print(e.files[0].path)
-        elif e.path:
-            selectedFileOrDirectory.value = e.path
-            dataLocation = e.path
-            isDirectory = True
-            print(e.path)
-        page.update()
+            global file_location 
+            file_location = e.files[0].path
+            print(f"File Location: {file_location}")
+        selected_files.update()
 
-    def updateFilter(e):
-        activeFilter[e.key] = {filterList[e.key]: e.value}
+    def pick_folder_result(e: ft.FilePickerResultEvent):
+        selected_files.value = e.path if e.path else "Abgebrochen!"
+        if e.path:
+            global file_location
+            file_location = e.path
+            print(f"File Location: {file_location}")
+        selected_files.update()
 
-    def analyzeData(e):
-        global dataLocation
-        global isDirectory
-        global extractionData
+    pick_files_dialog = ft.FilePicker(on_result=pick_files_result)
+    pick_folder_dialog = ft.FilePicker(on_result=pick_folder_result)
+    page.overlay.append(pick_files_dialog)
+    page.overlay.append(pick_folder_dialog)
 
-        if (isDirectory):
-            return
+    selected_files = ft.Text()
+    filterText = ft.Text()
+    
+    def mode_changed(e):
+        modus = e.control.value
+        print(f"neuer Modus: {modus}")
+        global file_location
+        if modus == "Datei":
+            uploadText.value = "Laden Sie eine Datei hoch:"
+            uploadButton.text = "Datei auswählen"
+            selected_files.value = ""
+            file_location = ""
+            uploadButton.on_click = lambda _: pick_files_dialog.pick_files(allow_multiple=False, allowed_extensions=["pdf"])
         else:
-            extractionData = extractor.runExtraction(dataLocation)
-            jsonData = json.loads(extractionData)
-            resultRowText.value = "Ergebnisse:"
-            fileTitle.value = "Titel: " + jsonData['title']
-            fileAuthor.value = "Student: " + jsonData['student']
-            fileMatNr.value = "Matrikelnummer: " + jsonData['matNr']
-            fileCompany.value = "Firma: " + jsonData['firma']
-            filePages.value = "Seitenanzahl: " + str(jsonData['totalPages'])
+            uploadText.value = "Laden Sie ein Verzeichnis hoch:"
+            uploadButton.text = "Verzeichnis auswählen"
+            selected_files.value = ""
+            file_location = ""
+            uploadButton.on_click = lambda _: pick_folder_dialog.get_directory_path()
+    llmText = ft.Text(value="", text_align=ft.TextAlign.CENTER, width=500)
 
+    def getLlmModel(e):
+        llmText.value = llm.analyzeJson(bachelorTestJson)
         page.update()
-
-    def exportCsvFile(e):
-        global extractionData
-        page.dialog = csvInfoDialog
-        csvInfoDialog.open = True
-        page.update()
-        exporter.createCsvFromJson(extractionData)
-
-    # Text Objects
-    selectedFileOrDirectory = ft.Text(value="keine Datei ausgewhält...", text_align=ft.TextAlign.LEFT, italic=True)
-    fileUploaderText = ft.Text(value="Wähle eine Datei oder einen Ordner:", text_align=ft.TextAlign.LEFT, size=20, width=500)
-    filterRowText = ft.Text(value="Wähle Filter aus:", text_align=ft.TextAlign.LEFT, size=20, width=500)
-    resultRowText = ft.Text(value="", text_align=ft.TextAlign.LEFT, size=20, width=500)
-    fileTitle = ft.Text(value="", width=500)
-    fileAuthor = ft.Text(value="", width=500)
-    fileMatNr = ft.Text(value="", width=500)
-    fileCompany = ft.Text(value="", width=500)
-    filePages = ft.Text(value="", width=500)
-
-    # Toast
-    csvInfoDialog = ft.AlertDialog(
-        title=ft.Text("CSV successfully exported!"), on_dismiss=lambda e: print("Dialog dismissed!")
-    )
-
-    # Filters
-    filterList = ["Titel", "Name", "Matrikelnummer", "Seitenanzahl"]
-    filtersChecked = []
-    activeFilter = []
-
+    modusWahl = ft.RadioGroup(value="Datei", content=ft.Column([
+        ft.Radio(value="Datei", label="Datei"),
+        ft.Radio(value="Ordner", label="Ordner")]), on_change=mode_changed)
     for item in filterList:
-        filter = {item: False}
-        activeFilter.append(filter)
+        filterCheckbox = {item: False}
+        activFilter.append(filterCheckbox)
 
     i = 0
     for item in filterList:
-        filter = {"key": i, "label": item}
-        filtersChecked.append(filter)
+        filterCheckbox = {"key": i, "label": item}
+        filterCheckboxList.append(filterCheckbox)
         i += 1
+    
+    def filterUpdate(e):
+        activFilter[e.key] = {filterList[e.key]: e.value}
 
-    # File Picker
-    pickFilesDialog = ft.FilePicker(on_result = onFilePicked)
-    page.overlay.append(pickFilesDialog)
+    def analysieren(e):
+        global file_location
+        if (modusWahl.value == "Datei"):
+            print("Analyse Datei...")
+        else:
+            print("Analyse Ordner...")
+        print(f"Analyse Modus: {modusWahl.value}")
+        print(f"Dateipfad: {file_location}")
 
-    # Upload Button
-    fileUploaderButton = ft.ElevatedButton("Auswählen",
-        icon = ft.icons.UPLOAD_FILE,
-        on_click = lambda f: pickFilesDialog.pick_files(allow_multiple=False, allowed_extensions=["pdf"]))
-
-    # Homepage Layout
-    fileUploaderRow = ft.Column(
+        i = 0
+        for item in activFilter:
+            key = filterList[i]
+            if item[key] == True:
+                print(f"{key}: active")
+            else:
+                print(f"{key}: inactive")
+            i += 1
+        print("Filter: "+ str(activFilter))
+        print("Analyse beendet!")
+        renderResultPage()
+    
+    mainPageList = []
+    mainPageFistRow = ft.Row(
         [
-            fileUploaderText,
-            ft.Row(
+            ft.Column( 
                 [
-                    fileUploaderButton,
-                    selectedFileOrDirectory
-                ]
-            )
-        ]
-    )
-
-    filterRow = ft.Column(
-        [
-            filterRowText,
-            ft.Row(
+                    ft.Text("Wählen Sie aus, was Sie analysieren wollen: "),
+                    modusWahl,
+                ],
+                ft.MainAxisAlignment.CENTER,
+            ),
+            ft.Column(
                 [
-                    *[ft.Checkbox(key=item['key'],
-                        label=item['label'],
-                        value=False,
-                        on_change=lambda e: updateFilter(e.control))
-                        for item in filtersChecked]
-                ]
-            )
-        ]
+                    uploadText,
+                    uploadButton,
+                    selected_files,
+                ],
+                ft.MainAxisAlignment.CENTER,
+            ),
+        ],
+        ft.MainAxisAlignment.SPACE_EVENLY,
+        ft.CrossAxisAlignment.CENTER,
     )
+    mainPageList.append(mainPageFistRow)
 
-    analyzedDataRow = ft.Container(
-        content = ft.Column(
+    mainPageSecondRow = ft.Container(
+        ft.Row(
             [
-                resultRowText,
-                fileTitle,
-                fileAuthor,
-                fileMatNr,
-                fileCompany,
-                filePages
+                ft.Text("Filter wählen: ")
             ]
         ),
-        height=200,
-        width=500
+        padding = ft.padding.only(left=8),
     )
-    
-    buttonRow = ft.Row(
+    mainPageList.append(mainPageSecondRow)
+
+    mainPageThirdRow = ft.Row(
         [
-            ft.ElevatedButton("CSV-Datei exportieren",
-                icon=ft.icons.IMPORT_EXPORT,
-                on_click = exportCsvFile),
-            ft.ElevatedButton("Datei/en analysieren",
-                icon=ft.icons.SEARCH_ROUNDED,
-                on_click = analyzeData)
-        ]
+            *[ft.Checkbox(key=item['key'],
+                label=item['label'],
+                value=False,
+                on_change=lambda e: filterUpdate(e.control))
+                for item in filterCheckboxList],
+            filterText,
+        ],
     )
+    mainPageList.append(mainPageThirdRow)
 
-    def createHomePage():
+    mainPageFourthRow = ft.Row(
+        [
+            ft.ElevatedButton(text="Analysieren", on_click=analysieren),
+        ],
+        ft.MainAxisAlignment.END,
+    )
+    mainPageList.append(mainPageFourthRow)
+
+    def renderMainPage():
         page.clean()
-        page.add(
-            fileUploaderRow,
-            ft.Divider(),
-            filterRow,
-            ft.Divider(),
-            analyzedDataRow,
-            ft.Divider(),
-            buttonRow
-        )
+        for item in mainPageList:
+            page.add(item)
 
-    createHomePage()
+    resultPageList = []
+    resultPageFistRow = ft.Row(
+        [
+            ft.Text("Result Page")
+        ],
+        ft.MainAxisAlignment.CENTER,
+        ft.CrossAxisAlignment.CENTER,
+        ft.IconButton(ft.icons.SEARCH_ROUNDED, on_click=getLlmModel)
+    )
+    resultPageList.append(resultPageFistRow)
 
+    resultPageSecondRow = ft.Row(
+        [
+            ft.DataTable(
+                columns=[
+                    ft.DataColumn(ft.Text("Filter")),
+                    ft.DataColumn(ft.Text("Ergebnis")),
+                ],
+                rows=[
+                    ft.DataRow(
+                        cells=[
+                            ft.DataCell(ft.Text(key)),
+                            ft.DataCell(ft.Text(str(value))),
+                        ]
+                    ) for item in resultList for key, value in item.items()
+                ]
+            ),
+        ],
+        ft.MainAxisAlignment.CENTER,
+    )
+    resultPageList.append(resultPageSecondRow)
+
+    resultPageThirdRow = ft.Row(
+        [
+            ft.ElevatedButton(text="Neue Analyse", on_click=lambda _: renderMainPage()),
+        ],
+        ft.MainAxisAlignment.END,
+    )
+    resultPageList.append(resultPageThirdRow)
+
+    def renderResultPage():
+        page.clean()
+        for item in resultPageList:
+            page.add(item)
+
+    renderMainPage()
 ft.app(main)
