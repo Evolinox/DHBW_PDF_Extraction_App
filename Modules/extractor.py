@@ -2,9 +2,8 @@ from PyPDF2 import PdfReader
 import os
 import re 
 import json
-folder = "Sample_PDFs"
-filelist = os.listdir(folder)#alle Testdateien
-reader = PdfReader("Sample_PDFs/" + filelist[0])#Ausgewählte Datei
+directory = ""
+reader = PdfReader(directory)#Ausgewählte Datei
 number_of_pages = len(reader.pages)
 page = reader.pages[0]
 text = page.extract_text()
@@ -23,8 +22,6 @@ listOfIllustrations = False
 pages = []
 
 def Metadata():
-
-    # All of the following could be None!
     print("Author = " +meta.author)
     print("creator = " + meta.creator)
     print("producer =" + meta.producer)
@@ -32,7 +29,7 @@ def Metadata():
     print("title = " +meta.title)
     print("Seitenzahl = " + str(number_of_pages))
     print("Text: ")
-#Metadata()
+
 def extracting():
     global totalText
     global pages
@@ -112,24 +109,6 @@ def getData():
                         author = line.split(":")[1].strip()                        
             else: author = "unknown"
 
-# def Immagecount(page):
-#     print(page)
-#     print("blubber")
-
-# def Listofillustrations():
-#     global pages
-#     global listOfIllustrations
-#     for page in pages:
-#         if "Abbildungsverzeichnis" in page.remove(" ", ""):
-#             if listOfIllustrations == True:
-#                 Immagecount(page)
-#                 break
-#             listOfIllustrations = True
-
-
-
-# Listofillustrations()
-
 def getTitle():
     global title
     title = text.split("helor")[0].replace("\n", "").strip()
@@ -168,8 +147,6 @@ def getCompany():
         company = "unknown"
     print(company)
 
-
-
 def printinfos():
     print("author: " + author)
     print("title: " + title)
@@ -178,30 +155,6 @@ def printinfos():
     print("")
 
 counter = 0
-# while counter < len(filelist):
-#     pagecounter = 0
-#     print(counter)
-#     print(filelist[counter])
-#     reader = PdfReader("Sample_PDFs/" + filelist[counter])
-#     page=reader.pages[0]
-#     getData()
-#     getTitle()
-#     getCompany()
-#     try:
-#         getMatNr()
-#     except: 
-#         pass
-#     printinfos()
-#     counter += 1
-
-# read = PdfReader("Sample_PDFs/" + filelist[20])
-# print(read.pages[0].extract_text())
-#print(read.pages[30].extract_text())
-#print(read.pages[2].extract_text())
-#print(read.pages[3].extract_text())
-
-#um zusätzlich erste Seite zu drucken
-
 
 def getJson():
     jsonContent = {
@@ -216,6 +169,7 @@ def getJson():
     return bachelorTestJson
 
 def runExtraction(arg):  
+    directory = arg
     extracting()
     getData()
     getTitle()

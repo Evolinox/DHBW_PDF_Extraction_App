@@ -17,9 +17,9 @@ def main(page: ft.Page):
         global isDirectory
         if e.files:
             selectedFileOrDirectory.value = e.files[0].name
-            dataLocation = e.files[0].name
+            dataLocation = e.files[0].path
             isDirectory = False
-            print(e.files[0].name)
+            print(e.files[0].path)
         elif e.path:
             selectedFileOrDirectory.value = e.path
             dataLocation = e.path
