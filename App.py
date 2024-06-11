@@ -1,16 +1,7 @@
 import flet as ft
 import Modules.llm as llm
-import json
 import Modules.extractor as extractor
 import Modules.exporter as exporter
-
-jsonContent = {
-    "title": "SAP ist cool!",
-    "student": "Patrick",
-    "firma": "SIT",
-    "gliederung": ["Einleitung", "Was ist SAP?", "Geschichte", "HANA", "UI5", "Meins Meinung"]
-}
-bachelorTestJson = json.dumps(jsonContent)
 
 def main(page: ft.Page):
     page.title = "PDF Extraction App"
