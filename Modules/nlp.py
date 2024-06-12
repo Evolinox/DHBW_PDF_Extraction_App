@@ -5,8 +5,8 @@ from nltk.tokenize import word_tokenize
 import ollama
 import json
 
-stop_words = set(stopwords.words("german"))
-test_str = "Bei Gebhardt werden alle Industrie 4.0 Produkte unter dem Namen Galileo IoT zusammengefasst. Darunter fallen Condition Monitoring, Predictive Maintenance, Digitale Zwillinge und generell alle Anwendungsgebiete, die sich mit Datenerhebung oder Auswertung befassen. Kunden bekommen ihre Daten und Auswertungen über eine Online-Plattform bereitgestellt. In diesem Kapitel geht es hauptsächlich um den Aufbau von Galileo Internet of Things (IoT)."
+#stop_words = set(stopwords.words("german"))
+#test_str = "Bei Gebhardt werden alle Industrie 4.0 Produkte unter dem Namen Galileo IoT zusammengefasst. Darunter fallen Condition Monitoring, Predictive Maintenance, Digitale Zwillinge und generell alle Anwendungsgebiete, die sich mit Datenerhebung oder Auswertung befassen. Kunden bekommen ihre Daten und Auswertungen über eine Online-Plattform bereitgestellt. In diesem Kapitel geht es hauptsächlich um den Aufbau von Galileo Internet of Things (IoT)."
 
 clusteredJson = {
     "data": [
