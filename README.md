@@ -16,7 +16,6 @@ CSV Export
 pip install flet
 pip install PyPDF2
 pip install PyPDF2[image]
-pip install ollama
 pip install nltk
 ```
 
