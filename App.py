@@ -1,6 +1,6 @@
 import flet as ft
 import json
-import Modules.llm as llm
+import Modules.nlp as nlp
 import Modules.extractor as extractor
 import Modules.exporter as exporter
 
