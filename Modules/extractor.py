@@ -3,22 +3,9 @@ import os
 import re 
 import json
 import Modules.nlp as nlp
-#n = 0
-#folder = "Sample_PDFs"
-
-#changepath
-#path = "C:\Users\nairo\Desktop\PDF working\Sample_PDFs"
-#os.chdir(path)
 reader = ""
 filename = ""
-
-#filelist = os.listdir(folder)#alle Testdateien
-#folder = "C:/Users/nairo/Desktop/rezepte/fezu"
-#filelist=os.listdir("C:/Users/nairo/Desktop/rezepte/fezu")
-#reader = PdfReader(folder +"/"+ filelist[n])#Ausgewählte Datei
 number_of_pages = 0
-#text = page.extract_text()
-#meta = reader.metadata
 a = 0
 location = ""
 totalText = ""
@@ -64,7 +51,6 @@ def getLocation(pagecounter):
 def getData(getAuthor):
         global location
         global text
-    #for files in filelist:
         global page
         global author
         global title
@@ -72,7 +58,6 @@ def getData(getAuthor):
 
         site = page.extract_text()
         pagetext = str(site)
-        #print(site)
         lines = pagetext.splitlines()
         text = ""
         for line in lines:
@@ -188,11 +173,6 @@ def runExtraction(getTitleBool, getAuthorBool, getCompanyBool, getMatnrBool):
     except:
         pass
 
-    
-    #print(author)
-    #print(filename)
-    #print(bachelorTestJson)
-
 
 def recieve(isFolder, file, getTitle, getAuthor, getNumberOfPages, getCompany, getMatNr):
     global reader
@@ -221,7 +201,3 @@ def recieve(isFolder, file, getTitle, getAuthor, getNumberOfPages, getCompany, g
             runExtraction(getTitle, getAuthor, getCompany, getMatNr)
     totalJson = nlp.getClusteredJson()
     return totalJson
-
-
-#recieve(True, "C:/Users/nairo/Desktop/PDF working/Sample_PDFs", True, True, True, True, True)
-#recieve(False, "C:\Users\nairo\Desktop\PDF working\Sample_PDFs\Bachelorarbeit Kitzelmann.pdf", True, True, True, True, True)
