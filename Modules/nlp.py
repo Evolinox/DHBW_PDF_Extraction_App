@@ -26,6 +26,7 @@ def analyzeJson(jsonObject):
     clusterJson()
 
 def analyzeTextWithNltk(text):
+    downloadNltkStuff()
     print("------ NLTK started:")
     posTags = nltk.pos_tag(word_tokenize(text))
     print("Text successfully analyzed...")
