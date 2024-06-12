@@ -1,0 +1,6 @@
+# Ergebnisbericht
+
+Ergebnissbeschreibung:
+Unsere App ermöglicht es Dozenten, aus Bachelor-Arbeiten die wichtigsten Randinformationen wie Autor, Seitenzahl, Titel und Unternehmen auszulesen. Diese Informationen werden anschließend an ein Natural Language Processing-System weitergegeben, um tiefgehendere Inhalte zu extrahieren. In der App können entweder eine einzelne PDF-Datei oder verschiedene Suchkriterien ausgewählt und an unser Backend übermittelt werden. Die Auswertung von Ordnern funktioniert allerdings aktuell nicht.
+
+Der Text wird im Backend basierend auf den Suchkriterien analysiert, und die Ergebnisse werden im Frontend angezeigt. Dabei kommt es vor, dass das Auslesen der PDF-Dateien teilweise Leerzeichen interpretiert, wo keine sind. Zudem werden je nach Schriftart manchmal Buchstaben nicht richtig erkannt oder ausgelassen, da der Extraktor diese nicht als bekannte Buchstaben identifizieren kann. Das Frontend bietet die Möglichkeit, die Auswertung als CSV-Datei zu exportieren.
