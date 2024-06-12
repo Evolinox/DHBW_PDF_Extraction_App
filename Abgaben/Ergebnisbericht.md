@@ -8,13 +8,58 @@ Der Text wird im Backend basierend auf den Suchkriterien analysiert, und die Erg
 
 ## Natural Language Processing
 
-Ein Ziel unserer Software war die Nutzung eines Large Language Models zur Analyse der genutzten Sprache in der Bachelorarbeit. Dafür nutzen wir anfangs `Ollama`, welches allerdings keine zufriedenstellenden Ergebnisse brachte. Deshalb sind wir später auf das `NLTK` (= Natural Language Toolkit) umgestiegen.
+Ein weiterer Kernpunkt unserer App ist dass die extrahierten Daten aus der PDF mithilfe moderner Technologien analysiert und kategorisiert werden können. Dafür haben wir das Modul `NTLK` (= Natural Language Toolkit) genutzt.
 
-Die Nutzung ist einfach zu handhaben, der erste Schritt ist die Installation von `NLTK`. Dies passiert mit dem folgenden Command:
+```python
+import nltk
+from nltk.tokenize import word_tokenize
+```
+
+NLTK ist ein leistungsfähiges und flexibles Werkzeug zur Verarbeitung natürlicher Sprache, das uns ermöglicht, den Text einer Bachelorarbeit auf verschiedene Merkmale hin zu untersuchen, einschließlich der Tokenisierung und der Erkennung von Wortarten (POS-Tagging)
+
+### Tokenisierung
+
+```python
+text = "Wer während der Autofahrt über Handy oder Freisprechanlage telefoniert, fährt wie ein angetrunkener Wagenlenker."
+# Beispieltext von: 
+# https://www.schreiben.zentrumlesen.ch/myUploadData/files/schreibberat_idee1104_wiss_formulieren_1_bsp.pdf
+
+tokenize = word_tokenize(text)
+```
+
+Ein zentrales Element unserer Analyse war die Tokenisierung, bei der der Text in kleinere Einheiten, sogenannte Tokens, zerlegt wurde. Diese Tokens können Wörter, Satzzeichen oder andere bedeutungstragende Elemente des Textes sein. Durch die Tokenisierung konnten wir die Struktur des Textes besser verstehen und weiterführende Analysen, wie die Häufigkeitsverteilung von Wörtern und die Erkennung von Mustern, durchführen.
+
+Für eine kleine Demonstration haben wir hier einmal den `text` (Quelle: [www.schreiben.zentrumlesen.ch](https://www.schreiben.zentrumlesen.ch/myUploadData/files/schreibberat_idee1104_wiss_formulieren_1_bsp.pdf)) mithilfe der Methode `word_tokenize()` tokenisieren lassen. Der Output in der Konsole sieht wie folgt aus:
 
 ```bash
-pip install nltk    # Windows
-pip3 install nltk   # macOS
+>>> print(tokenize)
+['Wer', 'während', 'der', 'Autofahrt', 'über', 'Handy', 'oder', 'Freisprechanlage', 'telefoniert', ',', 'fährt', 'wie', 'ein', 'angetrunkener', 'Wagenlenker', '.']
+```
+
+### POS Tagging
+
+```python
+posTags = nltk.pos_tag(tokenize)
+```
+
+Ein weiterer wichtiger Bestandteil unserer Textanalyse war das Part-of-Speech (POS) Tagging. Nachdem wir unseren Text einmal mit `nltk` tokenisiert haben, können wir mit der Methode `pos_tag()` den einzelnen Tokens eine entsprechende Wortart wie zum Beispiel *Nomen* oder *Verb* zuweisen. Der Output mit unserem Beispieltext in der Konsole sieht wie folgt aus:
+
+```bash
+>>> print(posTags)
+[('Wer', 'NNP'), ('während', 'NN'), ('der', 'NN'), ('Autofahrt', 'NNP'), ('über', 'NNP'), ('Handy', 'NNP'), ('oder', 'NN'), ('Freisprechanlage', 'NNP'), ('telefoniert', 'NN'), (',', ','), ('fährt', 'JJ'), ('wie', 'NN'), ('ein', 'NN'), ('angetrunkener', 'NN'), ('Wagenlenker', 'NNP'), ('.', '.')]
+```
+
+Hier kann man zum Beispiel sehen, das `nltk` dem Wort ***Handy*** die Wortart ***NNP*** zugewiesen hat. NNP steht in dem Fall für *Nomen Plural*. Leider ist aber auch `nltk` nicht fehlerfrei, so weist das Modul zum Beispiel auch dem Wort während die Art NN (=Nomen) zu, was nicht richtig ist.
+
+### Rückgabe an den Extractor
+
+Nachdem das POS Tagging abgeschlossen ist, werden die einzelnen Wortarten gezählt und deren Anzahl dem JSON Objekt hinzugefügt und dann an den `extractor` zurückgegeben.
+
+```python
+jsonData['totalAdjectives'] = countAdjectives
+jsonData['totalNouns'] = countNouns
+jsonData['totalAdverbs'] = countAdverbs
+jsonData['totalVerbs'] = countVerbs
 ```
 
 ## CSV-Exporter
