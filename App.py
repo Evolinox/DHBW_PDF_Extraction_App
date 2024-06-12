@@ -65,7 +65,7 @@ def main(page: ft.Page):
             selected_files.value = ""
             file_location = ""
             uploadButton.on_click = lambda _: pick_folder_dialog.get_directory_path()
-    llmText = ft.Text(value="", text_align=ft.TextAlign.CENTER, width=500)
+        selected_files.update()
 
     modusWahl = ft.RadioGroup(value="Datei", content=ft.Column([
         ft.Radio(value="Datei", label="Datei"),
