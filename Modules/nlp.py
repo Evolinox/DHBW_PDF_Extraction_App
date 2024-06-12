@@ -1,12 +1,12 @@
 import nltk
-from nltk.corpus import stopwords
+#from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
 import ollama
 import json
 
 #stop_words = set(stopwords.words("german"))
-#test_str = "Bei Gebhardt werden alle Industrie 4.0 Produkte unter dem Namen Galileo IoT zusammengefasst. Darunter fallen Condition Monitoring, Predictive Maintenance, Digitale Zwillinge und generell alle Anwendungsgebiete, die sich mit Datenerhebung oder Auswertung befassen. Kunden bekommen ihre Daten und Auswertungen über eine Online-Plattform bereitgestellt. In diesem Kapitel geht es hauptsächlich um den Aufbau von Galileo Internet of Things (IoT)."
+test_str = "Bei Gebhardt werden alle Industrie 4.0 Produkte unter dem Namen Galileo IoT zusammengefasst. Darunter fallen Condition Monitoring, Predictive Maintenance, Digitale Zwillinge und generell alle Anwendungsgebiete, die sich mit Datenerhebung oder Auswertung befassen. Kunden bekommen ihre Daten und Auswertungen über eine Online-Plattform bereitgestellt. In diesem Kapitel geht es hauptsächlich um den Aufbau von Galileo Internet of Things (IoT)."
 
 clusteredJson = {
     "data": [
@@ -15,7 +15,8 @@ clusteredJson = {
 }
 
 def downloadNltkStuff():
-    nltk.download()
+    nltk.download('punkt')
+    nltk.download('averaged_perceptron_tagger')
 
 def analyzeJson(jsonObject):
     global jsonData
@@ -26,6 +27,7 @@ def analyzeJson(jsonObject):
     clusterJson()
 
 def analyzeTextWithNltk(text):
+    downloadNltkStuff()
     print("------ NLTK started:")
     posTags = nltk.pos_tag(word_tokenize(text))
     print("Text successfully analyzed...")
