@@ -2,7 +2,7 @@ from PyPDF2 import PdfReader
 import os
 import re 
 import json
-import Modules.llm as llm
+import Modules.nlp as nlp
 #n = 0
 #folder = "Sample_PDFs"
 
@@ -184,7 +184,7 @@ def runExtraction(getTitleBool, getAuthorBool, getCompanyBool, getMatnrBool):
             pass
     try:
         getJson()
-        llm.analyzeJson(bachelorTestJson)
+        nlp.analyzeJson(bachelorTestJson)
     except:
         pass
 
@@ -219,7 +219,7 @@ def recieve(isFolder, file, getTitle, getAuthor, getNumberOfPages, getCompany, g
             if getNumberOfPages: 
                 number_of_pages = len(reader.pages)  
             runExtraction(getTitle, getAuthor, getCompany, getMatNr)
-    totalJson = llm.getClusteredJson()
+    totalJson = nlp.getClusteredJson()
     return totalJson
 
 
