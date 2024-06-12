@@ -16,3 +16,7 @@ Entwicklung einer Python-Anwendung zur Analyse von Bachelorarbeiten aus dem Bere
 ## Ist-Zustand
 
 Teilweise schlechte Planung der Interfaces zwischen den Modules, wodurch spätere Anpassungen nötig waren.
+
+## Fazit
+
+Trotz der teilweise fehlenden Planung konnte das Projekt dennoch erfolgreich beendet werden, ohne große Funktionseinbußen zu haben.
