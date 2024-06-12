@@ -30,6 +30,7 @@ def analyzeTextWithNltk(text):
     downloadNltkStuff()
     print("------ NLTK started:")
     posTags = nltk.pos_tag(word_tokenize(text))
+    print(posTags)
     print("Text successfully analyzed...")
     print("------ Extracted Data:")
     # Get all Adjectives
@@ -40,7 +41,7 @@ def analyzeTextWithNltk(text):
     # Get all Nouns
     countNouns = 0
     for item in posTags:
-        if (item[1] == "NN"):
+        if (item[1] == "NN" or item[1] == "NNP" or item[1] == "NNS"):
             countNouns += 1
     # Get all Adverbs
     countAdverbs = 0
@@ -50,7 +51,7 @@ def analyzeTextWithNltk(text):
     # Get all Verbs
     countVerbs = 0
     for item in posTags:
-        if (item[1] == "VB"):
+        if (item[1] == "VB" or item[1] == "VBD"):
             countVerbs += 1
     
     print("Total no. of Adjectives: " + str(countAdjectives))
