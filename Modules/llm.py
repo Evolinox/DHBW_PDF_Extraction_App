@@ -20,7 +20,9 @@ def downloadNltkStuff():
 def analyzeJson(jsonObject):
     global jsonData
     jsonData = json.loads(jsonObject)
-    analyzeTextWithNltk(jsonData['text'])
+    text = str(jsonData['text']).replace('- ', '')
+    #print(text)
+    analyzeTextWithNltk(text)
     clusterJson()
 
 def analyzeTextWithNltk(text):
