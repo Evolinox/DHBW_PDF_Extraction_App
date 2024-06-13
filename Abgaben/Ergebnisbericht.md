@@ -86,7 +86,7 @@ Hier kann man zum Beispiel sehen, das `nltk` dem Wort ***Handy*** die Wortart **
 
 ### Rückgabe an den Extractor
 
-Nachdem das POS Tagging abgeschlossen ist, werden die einzelnen Wortarten gezählt und deren Anzahl dem JSON Objekt hinzugefügt und dann an den `extractor` zurückgegeben.
+Nachdem das POS Tagging abgeschlossen ist, werden die einzelnen Wortarten gezählt und deren Anzahl dem JSON Objekt hinzugefügt und dann an den `extractor` zurückgegeben und von dort an das Frontend zuw Darstellung weitergeleitet.
 
 ```python
 jsonData['totalAdjectives'] = countAdjectives
