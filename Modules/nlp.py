@@ -23,7 +23,6 @@ def analyzeJson(jsonObject):
 
 def analyzeTextWithNltk(text):
     downloadNltkStuff()
-    text = exampleString
     print("------ NLTK started:")
     tokenize = word_tokenize(text)
     posTags = nltk.pos_tag(tokenize)
