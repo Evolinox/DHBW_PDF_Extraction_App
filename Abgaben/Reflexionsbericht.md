@@ -2,9 +2,14 @@
 
 Unser gewähltes Projekt "Analyse von PDF-DHBW-Praxisarbeiten mit Python-Tools zur Extraktion von Features" hatte das Ziel, eine Python App zuentwickeln, mit welcher Praxisarbeiten analysiert werden können.
 
-## Zeitplanung
+## Zeitplanung und Arbeitspakete
 
-
+Unser gesamtes Projekt haben wir in Arbeitspakete aufgeteilt, für welche wir wiederum Zeitschätzungen vorgenommen haben. Für manche Arbeitspakete war diese Schätzung sehr treffend, für andere wiederum haben wir uns, wie wir im Folgenden darstellen wollen, leider verschätzt.
+So haben wir gerade bei den Themen Reflexion und Testing unsere geplanten Zeiten perfekt eingehalten. Andere Themen, beispielsweiße das Aufsetzen des Frontends, gingen fast doppelt so schnell wie geplant oder wurden, wie die Datenbank, komplett ausgelassen. 
+Wieder andere Arbeitspakete wie beispielsweiße die Schnittstelle zwischen Front und Backend hingegen haben fast dreimal so lange gedauert wie geplant. 
+Im Gesamten haben sich diese Fehlschätzungen allerdings größtenteils ausgeglichen und wir haben nahezu perfekt das Gesamtbudget getroffen.
+Außerdem haben wir uns bei einigen Arbeitspaketen bereits in der Planung, vor ausreichender Recherche, für Arbeitsansätze festgelegt, ohne ausreichend recherchiert zu haben. So haben wir das Arbeitspaket LLM (Large Language Module) aufgestellt und uns dabei für Ollama entschieden. Stattdessen hat sich in der Umsetzung allerdings gezeigt, dass sich dieses Modell nicht eignet. Aus diesem Grund musste dann von der ursprünglichen Planung abgewichen werden und wir verwendeten ein Native Language Model. 
+Darüber hinaus haben wir im Projektverlauf festgestellt, dass uns ein Arbeitspaket zum Austausch fehlte und wir für Gespräche und Kommunikation mehr Zeit hätten einplanen sollen. 
 
 
 ## Geplant - Zieldefinition
@@ -27,14 +32,29 @@ Entwicklung einer Python-Anwendung zur Analyse von Bachelorarbeiten aus dem Bere
 - Die App ist nicht als ausführbare Anwendung (.exe) kompiliert. Sie wird von der IDE gestartet.
 - Es gibt die Möglichkeit zum Hochladen einzelner PDF-Dateien oder eines Ordners, wobei die Dateien selbst nicht dauerhaft gespeichert werden, doch das Hochladen eines Ordners führt zu Problemen in der Darstellung auf der Result-Seite. 
 
+## Zieldefinition
+
+Das Ziel des Projekts war die Entwicklung einer Python-Anwendung zur Analyse von Bachelorarbeiten im Bereich der Informatik. Diese Anwendung sollte mehrere zentrale Funktionen bieten. Eine davon war die Extraktion der Seitenzahlen, wobei spezifische Abschnitte wie das Inhaltsverzeichnis und die Quellenangaben besonders berücksichtigt werden sollten. Zudem sollte ein Large Language Model zur Ermittlung der Wortfrequenz eingesetzt werden, das in der Lage ist, alltägliche und unwichtige Wörter herauszufiltern. Ein weiterer wichtiger Aspekt war die Extraktion relevanter Metadaten vom Deckblatt der Bachelorarbeiten, wie zum Beispiel Informationen über den Autor und die beteiligte Firma.
+
+Die extrahierten Daten sollten in einem Benutzerinterface (UI) dargestellt und die Möglichkeit geboten werden, diese als CSV-Datei zu exportieren. Geplant war auch, die Anwendung entweder mit der Python-Bibliothek Flet oder durch Kompilierung mit Pygame als ausführbare Datei (.exe) bereitzustellen. Darüber hinaus sollte die Anwendung die Möglichkeit bieten, sowohl einzelne PDF-Dateien als auch ganze Ordner mit mehreren PDFs hochzuladen, wobei die hochgeladenen Dateien nur temporär für die Verarbeitung gespeichert und nach dem Schließen der Anwendung gelöscht werden sollten.
+
+Der Ist-Zustand des Projekts zeigt, dass die Extraktion der Seitenzahlen erfolgreich umgesetzt wurde. Anstelle des ursprünglich vorgesehenen Large Language Models kam jedoch ein Native Language Model zur Ermittlung der Wortfrequenz zum Einsatz. Die Extraktion der relevanten Metadaten konnte erfolgreich implementiert werden, wobei neben dem Autor auch der Duale Partner, der Titel der Arbeit und die Matrikelnummer des Studenten erfasst wurden. Die Umsetzung des Erkennens von Sperrvermerk und Verzeichnissen war, zeitbedingt, leider nicht mehr möglich.
+
+Die Darstellung der extrahierten Daten und deren Export als CSV-Datei wurden ebenfalls realisiert, jedoch nur für einzelne PDF-Dokumente. Leider wurde die Anwendung nicht als ausführbare Datei (.exe) kompiliert, sondern muss über die IDE gestartet werden. Die Möglichkeit, sowohl einzelne PDF-Dateien als auch Ordner hochzuladen, wurde implementiert. Dabei stellte sich jedoch heraus, dass das Hochladen eines ganzen Ordners zu Problemen in der Darstellung auf der Ergebnisseite führt.
 
 ## Fazit - Learning
 
-- Teilweise schlechte Planung / missverständliche Kommunikation der Interfaces zwischen den Modules, wodurch spätere Anpassungen nötig waren.
-- Trotz der teilweise fehlenden Planung konnte das Projekt dennoch erfolgreich beendet werden, ohne große Funktionseinbußen zu haben.
-- Das Planen mit neuen Frameworks / Tools birgt die Gefahr, dass beim Umsetzten Fehler und Unklarheiten auftauchen, die man so nicht vorhergesehen hat
-- Die Wahl des rochtigen Tools mit ausreichender Dokumentation und genügend Erprobung ist essentiel für den Erfolg des Projektes - Flet hat eine Dokumentation, ist jedoch nicht so viel genutzt wie HTML und Co und hat deshalb nicht soviele User, die das selbe Problem hatten und somit ist es schwieriger die Lösung eines spezifischen Problems zu finden.
+Unser kürzlich abgeschlossenes Projekt war in vielerlei Hinsicht eine lehrreiche Erfahrung. Einer der Hauptpunkte war die teilweise unzureichende Planung und die missverständliche Kommunikation zwischen den Modulen. Dies führte dazu, dass im späteren Verlauf Anpassungen notwendig wurden, die bei einer klareren Anfangsphase vermeidbar gewesen wären.
 
+Ein weiterer wichtiger Aspekt war die Arbeit mit neuen Frameworks und Tools. Es hat sich gezeigt, dass das Planen mit solchen neuen Technologien das Risiko birgt, dass unerwartete Fehler und Unklarheiten auftreten. Diese waren im Vorfeld oft nicht absehbar, was den Projektverlauf zusätzlich erschwert hat.
+
+Die Wahl der richtigen Tools spielt eine entscheidende Rolle für den Projekterfolg. Unsere Erfahrung mit dem Tool Flet, das zwar eine Dokumentation bietet, aber nicht so weit verbreitet ist wie HTML und ähnliche Technologien, hat gezeigt, dass die begrenzte Anzahl von Nutzern und der daraus resultierende Mangel an verfügbaren Lösungen für spezifische Probleme eine große Herausforderung darstellen kann.
+
+Auch die Definition der einzelnen Arbeitspakete hätte präziser sein können. Eine klarere Ausformulierung der Aufgaben und der erwarteten Ergebnisse hätte das Erreichen der Projektziele erleichtert und die Zusammenarbeit effizienter gestaltet.
+
+Trotz dieser Herausforderungen konnten wir das Projekt dennoch erfolgreich abschließen, ohne wesentliche Funktionseinbußen hinnehmen zu müssen. 
+
+Zusammenfassend lässt sich sagen, dass klare Kommunikation, präzise Planung und die sorgfältige Auswahl der Tools und Technologien essentiell sind, um den Erfolg eines Projektes sicherzustellen. Diese Erkenntnisse werden uns in zukünftigen Projekten helfen, effizienter und zielgerichteter zu arbeiten.
 
 
 

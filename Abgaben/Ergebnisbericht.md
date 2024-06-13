@@ -17,6 +17,28 @@ Die geplante Result Page kann aktuell nur die Analyse einer einzelnen PDF anzeig
 Im Allgemeinen ist das Frontend auf das Wesentliche reduziert und intuitiv gestaltet.
 
 
+## Ergebnisbericht über das Backend
+
+Ziel des Backends war es, möglichst viele Informationen aus der übergebenen PDF zu gewinnen. Dafür wird diese mittels PyPDF in einen String konvertiert. Außerdem werden vom Frontend einige boolsche Werte übergeben, welche definieren, welche Informationen aus dem Text ausgelesen werden sollen.
+Anhand dieser werden auf verschiedene Weißen die Daten extrahiert. So wird zuerst der Standort der Hochschule gewonnen, welcher auch für das verwendete Layout der Arbeit entscheidend ist und darüber entscheidet, nach welchem Kriterium weitere Informationen gewonnen werden. 
+Dies möchten wir anhand der Bestimmung des Autors erläutern:
+
+if getAuthor: 
+    if location == "Mosbach" or location == "Bad Mergentheim":
+        for line in lines:
+            if "von" in line.replace(" ", "") and len(line.replace(" ",""))<5: #get Author; funktioniert nur, wenn es eine gewisse Formatierun gibt
+            author = lines[lines.index(line)+1].strip()
+
+
+Die erste Zeile überprüft hierbei, ob der Autor ein gesuchtes Kriterium ist.
+Die zweite Zeile prüft, ob die Location Mosbach oder Bad Mergentheim ist, da diese ein einheitliches Layout teilen.
+Nun werden alle Zeilen des Deckblattes nacheinander durchgegangen und nach einer Zeile gesucht, welche (nur) "von" enthält (ein gemeinsames Kriterium der beiden Standorte). 
+Wird eine solche Zeile gefunden, wird die nächste Zeile als Autor gespeichert.
+
+Wie hier schon ausgefallen sein könnte, müssen im Text Leerzeichen entfernt werden. Dies liegt daran, dass in einer PDF der Text nicht immer in den Buchstaben wie wir sie nutzen gespeichert ist, sondern grafisch und erst interpretiert werden muss. Ein Problem, welches hierbei auftreten kann, ist es, dass Buchstaben nicht/falsch erkannt und ausgelassen werden, oder an falschen Stellen Leerzeichen erkannt werden - ein Problem, welches wir bestmöglich umgehen wollten.
+
+Nachdem aller erwünschten Informationen über den Text gewonnen wurden, werden diese, zusammen mit dem Text, in einer JSON an das Natural Language Processing übergeben, um weiter verarbeitet zu werden.
+
 ## Natural Language Processing
 
 Ein weiterer Kernpunkt unserer App ist dass die extrahierten Daten aus der PDF mithilfe moderner Technologien analysiert und kategorisiert werden können. Dafür haben wir das Modul `NTLK` (= Natural Language Toolkit) genutzt.
