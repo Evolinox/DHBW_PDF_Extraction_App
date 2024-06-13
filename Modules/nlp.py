@@ -3,6 +3,7 @@ from nltk.tokenize import word_tokenize
 
 import json
 
+exampleString = "Wer während der Autofahrt über Handy oder Freisprechanlage telefoniert, fährt wie ein angetrunkener Wagenlenker."
 clusteredJson = {
     "data": [
 
@@ -23,9 +24,11 @@ def analyzeJson(jsonObject):
 def analyzeTextWithNltk(text):
     downloadNltkStuff()
     print("------ NLTK started:")
-    posTags = nltk.pos_tag(word_tokenize(text))
+    tokenize = word_tokenize(text)
+    posTags = nltk.pos_tag(tokenize)
+    print(tokenize)
     print(posTags)
-    print("Text successfully analyzed...")
+    print("Text successfully tokenized...")
     print("------ Extracted Data:")
     # Get all Adjectives
     countAdjectives = 0
@@ -59,6 +62,7 @@ def analyzeTextWithNltk(text):
     jsonData['totalNouns'] = countNouns
     jsonData['totalAdverbs'] = countAdverbs
     jsonData['totalVerbs'] = countVerbs
+    jsonData['tokenizedText'] = tokenize
 
 def clusterJson():
     clusteredJson['data'].append(jsonData)
